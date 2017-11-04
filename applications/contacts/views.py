@@ -8,5 +8,5 @@ class ContactViewSet(viewsets.ModelViewSet):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
 
-    def update(self, request, *args, **kwargs):
-        import pdb; pdb.set_trace();
+    # def update(self, request, *args, **kwargs):
+    #     import pdb; pdb.set_trace();

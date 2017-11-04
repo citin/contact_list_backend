@@ -2,10 +2,7 @@ from django.db import models
 
 from tagulous.models import TagField
 
-
-class ContactsList(models.Model):
-
-    title = models.CharField(max_length=255)
+from applications.campaigns.models import Campaign
 
 
 class Contact(models.Model):
@@ -18,10 +15,13 @@ class Contact(models.Model):
 
     phone = models.CharField(max_length=100)
 
-    contacts_list = models.ForeignKey(
-        ContactsList,
-        related_name='contacts'
-    )
+    # TODO: add belongs_to user and unique_together = ('email', 'user')
+
+
+class ContactsList(models.Model):
+
+    contact = models.ForeignKey(Contact, related_name='contacts_list')
+    campaign = models.ForeignKey(Campaign, related_name='contacts_list')
 
     class Meta:
-        unique_together = ('email', 'contacts_list')
+        unique_together = ('contact', 'campaign')
