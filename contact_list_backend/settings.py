@@ -39,9 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'django_extensions',
-
-    'contacts',
     'rest_framework',
+    'tagulous',
+
+    'applications.contacts',
+    'applications.campaigns',
 ]
 
 MIDDLEWARE = [
@@ -131,3 +133,9 @@ STATIC_URL = '/static/'
 #        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
 #    ]
 #    }
+
+# Tagulous settings
+SERIALIZATION_MODULES = {
+    'json':   'tagulous.serializers.json',
+    'python': 'tagulous.serializers.python',
+}
