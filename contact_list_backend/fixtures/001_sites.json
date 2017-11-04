@@ -1,0 +1,11 @@
+[
+    {
+        "model": "sites.site",
+        "pk": 1,
+        "fields": {
+            "id": "1",
+            "domain": "localhost:8080",
+            "name": "Una App"
+        }
+    }
+]
