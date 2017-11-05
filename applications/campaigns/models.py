@@ -10,7 +10,7 @@ class Campaign(models.Model):
         through='contacts.ContactsList',
     )
 
-    body = models.TextField(default='')
+    body = models.TextField()
 
 
 class CampaignTemplate(models.Model):

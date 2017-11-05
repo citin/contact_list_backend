@@ -3,19 +3,24 @@ from django.db import models
 from tagulous.models import TagField
 
 from applications.campaigns.models import Campaign
+from allauth import app_settings as allauth_app_settings
 
 
 class Contact(models.Model):
 
     name = models.CharField(max_length=255)
 
-    tags = TagField()
+    tags = TagField(blank=True)
 
     email = models.EmailField(max_length=255)
 
-    phone = models.CharField(max_length=100)
+    phone = models.CharField(max_length=100, null=True, blank=True)
 
-    # TODO: add belongs_to user and unique_together = ('email', 'user')
+    user = models.ForeignKey(
+        allauth_app_settings.USER_MODEL, related_name='contacts')
+
+    class Meta:
+        unique_together = ('email', 'user')
 
 
 class ContactsList(models.Model):
