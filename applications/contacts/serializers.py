@@ -1,13 +1,17 @@
 from rest_framework import serializers
+from taggit_serializer.serializers import TagListSerializerField
+from taggit_serializer.serializers import TaggitSerializer
 
 from applications.contacts.models import Contact
 
 
-class ContactSerializer(serializers.ModelSerializer):
+class ContactSerializer(TaggitSerializer, serializers.ModelSerializer):
+
+    tags = TagListSerializerField()
 
     class Meta:
         model = Contact
-        fields = ('name', 'email', 'phone')
+        fields = ('name', 'email', 'phone', 'tags')
 
     def validate_email(self, value):
         user = self.context['request'].user

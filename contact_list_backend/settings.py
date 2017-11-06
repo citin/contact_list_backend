@@ -26,7 +26,7 @@ SECRET_KEY = 'ni5a4x%*r7=6_9anj&%z379*ve+&hxs7#bah^7!i2#do%yt=%s'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -42,7 +42,8 @@ INSTALLED_APPS = [
 
     'django_extensions',
     'rest_framework',
-    'tagulous',
+    'taggit',
+    'taggit_serializer',
     'allauth',
     'allauth.account',
 
@@ -143,12 +144,6 @@ REST_FRAMEWORK = {
 
 JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(hours=24),
-}
-
-# Tagulous settings
-SERIALIZATION_MODULES = {
-    'json':   'tagulous.serializers.json',
-    'python': 'tagulous.serializers.python',
 }
 
 # allauth configs
