@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'taggit_serializer',
     'allauth',
     'allauth.account',
+    'corsheaders',
 
     'applications.contacts',
     'applications.campaigns',
@@ -54,12 +55,18 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ORIGIN_WHITELIST = (
+    'localhost:*',
+    '127.0.0.1:*'
+)
 
 ROOT_URLCONF = 'contact_list_backend.urls'
 
