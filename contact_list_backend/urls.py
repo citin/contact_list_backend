@@ -1,5 +1,6 @@
 from django.conf.urls import url, include
 from django.contrib import admin
+from django.views.generic import TemplateView
 
 from rest_framework import routers
 from rest_framework_jwt.views import obtain_jwt_token
@@ -18,4 +19,6 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^api-token-auth/', obtain_jwt_token),
     url(r'^accounts/', include('allauth.urls')),
+    url(r'^view2/', TemplateView.as_view(template_name='view2.html')),
+    url(r'^view1/$', TemplateView.as_view(template_name='view1.html')),
 ]
