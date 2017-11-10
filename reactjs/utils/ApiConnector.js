@@ -1,40 +1,24 @@
-import { getIdToken, isLoggedIn } from './AuthService';
+import { getIdToken, isLoggedIn, csrf } from './AuthService';
+import axios from 'axios';
 
-export function postIt(resource, body) {
-
-  var options = {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Authorization': "JWT " + getIdToken(),
-      'Access-Control-Allow-Headers': 'Content-Type',
-      'Content-Type': 'undefined',
-      'Accept': 'application/json',                  
-    },
-    body: body
-  }
-  return fetch('http://localhost:8000/' + resource , options)
-    .then((response) => {
-      return response.json()
-    })
+function reload_conf() 
+{
+axios.defaults.baseURL = 'http://localhost:8000/';
+axios.defaults.headers.common['Authorization'] = "JWT " + getIdToken();
+axios.defaults.headers.common['X-CSRF-Token'] = csrf();
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+}
+export function postIt(resource, body, contentType) {
+  reload_conf();
+  return axios.post(resource, body)
 }
 
 export function getIt(resource) {
+  reload_conf();
+  return axios.get(resource)
+}
 
-    var options = {
-      method: 'GET',
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Content-Type': 'undefined',
-        'Accept': 'application/json',                  
-        'Authorization': "JWT " + getIdToken(),
-      },
-    }
-
-   return fetch('http://localhost:8000/' + resource, options)
-      .then((response) => {
-        return response.json()
-      })
+export function deleteIt(resource) {
+  reload_conf();
+  return axios.delete(resource)
 }

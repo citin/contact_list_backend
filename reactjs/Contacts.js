@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import { getIdToken } from './utils/AuthService';
-import { getIt, postIt } from './utils/ApiConnector';
+import { getIdToken, csrf } from './utils/AuthService';
+import { getIt, postIt, deleteIt } from './utils/ApiConnector';
 
 class ContactItem extends Component {
   handleClick()
@@ -86,30 +86,41 @@ class Contacts extends Component {
     this.state = {contactsData: [] }//contactosData}
   }
 
-  componentDidMount() {
-      getIt('contacts/')
+  all()
+  {
+    getIt('contacts/')
       .then((contacts) => {
-        this.setState({ contactsData: contacts })
+        this.setState({ contactsData: contacts.data })
       })
   }
-  
+
+  componentDidMount() {
+    this.all()
+  }
+
   deleteContact(contactPk)
   {
-    let filtered = this.state.contactsData.filter(
-      contact => contact.id !== contactPk
-    );
-    this.setState({contactsData: filtered})
+    deleteIt('contacts/'+contactPk+'/')
+      .then( () => {
+        let filtered = this.state.contactsData.filter(
+          contact => contact.id !== contactPk
+        );
+        this.setState({contactsData: filtered})
+      })
   }
 
   addContact(name)
   {
     var formData  = new FormData();
     formData.append('name', name);
+    formData.append('email', 'imeil@dominio.com');
+    formData.append('tags', '{["apple", "banana", "orange"]}');
+    formData.append('csrftoken', csrf());
 
-    postIt('contacts/', formData)
-    this.state.contactsData.push({id: this.maxId() + 1, name: name});
-    // todo: llamar de nuevo a la api para traer todos
-    this.setState({contactsData: this.state.contactsData})
+    postIt('contacts/', formData, 'multipart/form-data')
+      .then( () => {
+        this.all()
+      })
   }
 
   count()

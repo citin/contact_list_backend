@@ -22,11 +22,9 @@ export function login() {
     formData.append('username', 'cito');
     formData.append('password', 'cito1234');
 
-    postIt('api-token-auth/', formData)
+    postIt('api-token-auth/', formData, 'multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW')
       .then((response) => {
-        console.log(response.token)
-        let idToken = getParameterByName('id_token');
-        localStorage.setItem(ID_TOKEN_KEY, response.token);
+        localStorage.setItem(ID_TOKEN_KEY, response.data.token);
       })
 }
 
@@ -78,6 +76,10 @@ export function setIdToken() {
 export function isLoggedIn() {
   const idToken = getIdToken();
   return !!idToken && !isTokenExpired(idToken);
+}
+
+export function csrf() {
+  document.querySelector('meta[name=csrftoken]').content
 }
 
 function getTokenExpirationDate(encodedToken) {
