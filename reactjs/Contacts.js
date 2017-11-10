@@ -113,8 +113,8 @@ class Contacts extends Component {
   {
     var formData  = new FormData();
     formData.append('name', name);
-    formData.append('email', 'imeil@dominio.com');
-    formData.append('tags', '{["apple", "banana", "orange"]}');
+    formData.append('email', name + '@dominio.com');
+    formData.append('tags', '["apple", "banana", "orange"]');
     formData.append('csrftoken', csrf());
 
     postIt('contacts/', formData, 'multipart/form-data')
