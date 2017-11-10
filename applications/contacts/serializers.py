@@ -11,7 +11,8 @@ class ContactSerializer(TaggitSerializer, serializers.ModelSerializer):
 
     class Meta:
         model = Contact
-        fields = ('name', 'email', 'phone', 'tags')
+        fields = ('id', 'name', 'email', 'phone', 'tags')
+        read_only_fields = ('id',)
 
     def validate_email(self, value):
         user = self.context['request'].user
@@ -20,3 +21,4 @@ class ContactSerializer(TaggitSerializer, serializers.ModelSerializer):
                 'No puede crear dos contactos con el mismo email.'
             )
         return value
+
