@@ -1,6 +1,6 @@
 import decode from 'jwt-decode';
 import auth0 from 'auth0-js';
-
+import { postIt } from './ApiConnector';
 
 const ID_TOKEN_KEY = 'id_token';
 const ACCESS_TOKEN_KEY = 'access_token';
@@ -17,42 +17,17 @@ var auth = new auth0.WebAuth({
 });
 
 export function login() {
-  // auth.authorize({
-  //   responseType: 'token id_token',
-  //   redirectUri: REDIRECT,
-  //   audience: AUDIENCE,
-  //   scope: SCOPE
-  // });
 
-  var formData  = new FormData();
-  formData.append('username', 'cito');
-  formData.append('password', 'cito1234');
+    var formData  = new FormData();
+    formData.append('username', 'cito');
+    formData.append('password', 'cito1234');
 
-    var options = {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Content-Type': 'undefined',//'multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW',
-        'Accept': 'application/json',                  
-      },
-      body: formData
-      // JSON.stringify({
-      //   username: 'cito',
-      //   password: 'cito1234',
-      // })
-    }
-    fetch('http://localhost:8000/api-token-auth/', options)
-      .then((response) => {
-        return response.json()
-      })
+    postIt('api-token-auth/', formData)
       .then((response) => {
         console.log(response.token)
         let idToken = getParameterByName('id_token');
         localStorage.setItem(ID_TOKEN_KEY, response.token);
       })
-
 }
 
 export function logout() {
