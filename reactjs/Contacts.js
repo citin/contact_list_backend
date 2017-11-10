@@ -1,11 +1,6 @@
 import React, {Component} from 'react';
 import { getIdToken } from './utils/AuthService';
-
-// todo: reemplazar por repo remoto
-// var contactosData = [
-//   {id: 1, name: 'Mario Bross'},
-//   {id: 2, name: 'Juan Carlos Google'},
-// ];
+import { getIt, postIt } from './utils/ApiConnector';
 
 class ContactItem extends Component {
   handleClick()
@@ -92,21 +87,7 @@ class Contacts extends Component {
   }
 
   componentDidMount() {
-    var options = {
-      method: 'GET',
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Content-Type': 'undefined',//'multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW',
-        'Accept': 'application/json',                  
-        'Authorization': "JWT " + getIdToken(),
-      },
-    }
-
-    fetch('http://localhost:8000/contacts', options)
-      .then((response) => {
-        return response.json()
-      })
+      getIt('contacts/')
       .then((contacts) => {
         this.setState({ contactsData: contacts })
       })
@@ -122,7 +103,12 @@ class Contacts extends Component {
 
   addContact(name)
   {
+    var formData  = new FormData();
+    formData.append('name', name);
+
+    postIt('contacts/', formData)
     this.state.contactsData.push({id: this.maxId() + 1, name: name});
+    // todo: llamar de nuevo a la api para traer todos
     this.setState({contactsData: this.state.contactsData})
   }
 
