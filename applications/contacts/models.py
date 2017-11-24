@@ -22,6 +22,9 @@ class Contact(models.Model):
     class Meta:
         unique_together = ('email', 'user')
 
+    def __str__(self):
+        return self.email
+
 
 class ContactsList(models.Model):
 

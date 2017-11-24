@@ -10,6 +10,7 @@ import Campaigns from './Campaigns'
 import Contacts from './Contacts'
 import Layout from './Layout'
 import LogIn from './LogIn'
+import PrivateRoute from './utils/PrivateRoute'
 
 const Home = () => <div> Bienvenidos </div>;
 
@@ -18,9 +19,10 @@ const AppRouter = () => (
         <div>
             <Layout/>
             <Route exact path="/" component={Home} />
-            <Route path="/contacts" component={Contacts} />
+            <PrivateRoute path="/contacts" component={Contacts} />
             <Route path="/campaigns" component={Campaigns} />
             <Route path="/callback" component={Callback} />
+            <Route path="/login" component={LogIn} />
         </div>
     </Router>
 )

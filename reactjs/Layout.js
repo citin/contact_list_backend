@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import { Link } from 'react-router-dom'
 
 import { login, logout, isLoggedIn } from './utils/AuthService';
+import AuthButton from './AuthButton';
 
 class Layout extends Component
 {
@@ -23,11 +24,7 @@ class Layout extends Component
                 </ul>
                 <ul className="nav navbar-nav navbar-right">
                     <li>
-                        {
-                            (isLoggedIn())
-                                ? ( <button className="btn btn-danger log" onClick={() => logout()}>Log out </button> )
-                                : ( <button className="btn btn-info log" onClick={() => login()}>Log In</button> )
-                        }
+                        <AuthButton/>
                     </li>
                 </ul>
             </nav>
