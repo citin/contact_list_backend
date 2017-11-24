@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load render_bundle from webpack_loader %}
+
+{% block main %}
+
+    <div id="root">
+        {# Application will be loaded here #}
+    </div>
+
+    {% render_bundle 'vendors' %}
+    {% render_bundle 'App1' %}
+{% endblock %}

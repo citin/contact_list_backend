@@ -1,7 +1,7 @@
-import React from 'react'
+import React from 'react';
 
 import {
-    BrowserRouter as Router,
+    HashRouter as Router,
     Route,
 } from 'react-router-dom'
 
@@ -9,8 +9,9 @@ import Callback from './Callback'
 import Campaigns from './Campaigns'
 import Contacts from './Contacts'
 import Layout from './Layout'
+import LogIn from './LogIn'
 
-const Home = () => <div> Bienvenidos </div>
+const Home = () => <div> Bienvenidos </div>;
 
 const AppRouter = () => (
     <Router>
