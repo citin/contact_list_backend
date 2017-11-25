@@ -18,11 +18,13 @@ const AppRouter = () => (
     <Router>
         <div>
             <Layout/>
-            <Route exact path="/" component={Home} />
-            <PrivateRoute path="/contacts" component={Contacts} />
-            <Route path="/campaigns" component={Campaigns} />
-            <Route path="/callback" component={Callback} />
-            <Route path="/login" component={LogIn} />
+            <div className="row">
+                <Route exact path="/" component={Home} />
+                <PrivateRoute path="/contacts" component={Contacts} />
+                <Route path="/campaigns" component={Campaigns} />
+                <Route path="/callback" component={Callback} />
+                <Route path="/login" component={LogIn} />
+            </div>
         </div>
     </Router>
 )

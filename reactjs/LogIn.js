@@ -1,39 +1,91 @@
 import React, {Component} from 'react'
+import PropTypes from 'prop-types'
+import { Redirect, withRouter } from 'react-router-dom'
+import { login, isLoggedIn } from './utils/AuthService'
 
-// TODO: login with this component
-class LogIn extends Component
+class BaseLogIn extends Component
 {
 
-    construct()
+    static propTypes = {
+        match: PropTypes.object.isRequired,
+        location: PropTypes.object.isRequired,
+        history: PropTypes.object.isRequired,
+    }
+
+    constructor(props)
     {
-        this.setState({ login_error: false })
+        super(props)
+        this.state = { username: '', password: '' }
+
+        this.handleSubmit   = this.handleSubmit.bind(this)
+        this.updateUsername = this.updateUsername.bind(this)
+        this.updatePassword = this.updatePassword.bind(this)
     }
 
 
-    handleSubmit(e) {
-        e.preventDefault()
+    handleSubmit(event) {
+        event.preventDefault()
 
-        var username = this.refs.username.value
-        var pass = this.refs.pass.value
+        if (Boolean(this.state.username) === true &&
+            Boolean(this.state.password) === true)
+        {
+            login(
+                this.state.username,
+                this.state.password,
+                () => { this.props.history.push('/contacts') },
+                () => { this.setState({
+                    loginError: true,
+                    errorMsg: 'Username or password incorrect.'
+                }) }
+            )
+        } else {
+            this.setState({loginError: true, errorMsg: 'Both fields are required'})
+        }
 
-        auth.login(username, pass, (loggedIn) => {
-            if (loggedIn) {
-                this.context.router.replace('/app/')
-            } else {
-                this.setState({login_error:true})
-            }
-        })
+    }
+
+    updateUsername(event)
+    {
+        this.setState({ username: event.target.value });
+    }
+
+    updatePassword(event)
+    {
+        this.setState({ password: event.target.value });
     }
 
     render() {
         return (
-            <form onSubmit={this.handleSubmit}>
-                <input type="text" placeholder="username" ref="username"/>
-                <input type="password" placeholder="password" ref="pass"/>
-                <input type="submit"/>
-            </form>
+            !isLoggedIn()
+            ? (
+                <div className="col-md-6 col-md-offset-3 text-center">
+                    <form onSubmit={this.handleSubmit} className={this.state.loginError ? 'has-error' : ''}>
+                        { this.state.loginError
+                            ? <div className="alert alert-danger">{this.state.errorMsg}</div>
+                            : '' }
+                            <div className="form-group">
+                                <input type="text"
+                                    placeholder="username"
+                                    className="form-control"
+                                    value={this.state.username}
+                                    onChange={this.updateUsername}/>
+                            </div>
+                            <div className="form-group">
+                                <input type="password"
+                                    placeholder="password"
+                                    className="form-control"
+                                    value={this.state.password}
+                                    onChange={this.updatePassword}/>
+                            </div>
+                            <input type="submit" className="btn btn-success"/>
+                        </form>
+                    </div>
+            )
+            : <Redirect to="/contacts"/>
         )
     }
 }
+
+const LogIn = withRouter(BaseLogIn)
 
 export default LogIn

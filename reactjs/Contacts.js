@@ -63,18 +63,19 @@ class ContactInput extends Component {
     render()
     {
         return (
-            <form className="contact-input-wrapper form-group"
-                onSubmit={this.handleSubmit.bind(this)}>
+            <form onSubmit={this.handleSubmit.bind(this)}>
 
-                <input type='text'
-                    className={this.inputClass()}
-                    name='contactName'
-                    value={this.state.contactName}
-                    onChange={this.updateState.bind(this)}/>
+                <div className="form-group">
+                    <input type='text'
+                        className={this.inputClass()}
+                        name='contactName'
+                        value={this.state.contactName}
+                        onChange={this.updateState.bind(this)}/>
 
-                <button className="btn btn-outline-success" type="submit">
-                    Add
-                </button>
+                </div>
+                <div className="form-group">
+                    <input className="btn btn-success" type="submit" value="Add"/>
+                </div>
             </form>
         )
     }
@@ -146,19 +147,23 @@ class Contacts extends Component {
         const items = (this.state.contactsData || []).map(
             (contactData) => {
                 return <ContactItem key={contactData.id.toString()}
-                                    contactData={contactData}
-                                    deleteContact={this.deleteContact.bind(this)}/>
+                    contactData={contactData}
+                    deleteContact={this.deleteContact.bind(this)}/>
             }
         );
         return (
-            <div className="App">
-                <div className="jumbotron">
-                    <h1>Contact List</h1>
+            <div>
+                <div className="col-md-12">
+                    <div className="jumbotron">
+                        <h1>Contact List</h1>
+                    </div>
                 </div>
-                <ul className="list-group d-inline-flex p-4">
-                    {items}
-                </ul>
-                <ContactInput addContact={this.addContact.bind(this)}/>
+                <div className="col-md-6 col-md-offset-3">
+                    <ul className="list-group">
+                        {items}
+                    </ul>
+                    <ContactInput addContact={this.addContact.bind(this)}/>
+                </div>
             </div>
         );
     }

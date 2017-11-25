@@ -8,18 +8,18 @@ var reload_conf = () => {
     axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 }
 
-var postIt = (resource, body, contentType) => {
-    reload_conf();
+var postIt = (resource, body) => {
+    reload_conf()
     return axios.post(resource, body)
 }
 
 var getIt = (resource) => {
-    reload_conf();
+    reload_conf()
     return axios.get(resource)
 }
 
 var deleteIt = (resource) => {
-    reload_conf();
+    reload_conf()
     return axios.delete(resource)
 }
 

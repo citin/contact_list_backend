@@ -5,19 +5,24 @@ const ID_TOKEN_KEY     = 'id_token';
 const ACCESS_TOKEN_KEY = 'access_token';
 const CSRF_SELECTOR    = 'meta[name=csrftoken]';
 
-var login = (cb) => {
+var login = (username, password, success, error) => {
 
-    var formData  = new FormData();
-    formData.append('username', 'farfanoide');
-    formData.append('password', 'farfa');
+    if (!username || !password) return false
 
-    postIt('api-token-auth/',
+    let formData  = new FormData()
+    formData.append('username', username)
+    formData.append('password', password)
+
+    return postIt('api-token-auth/',
         formData,
         'multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW')
         .then((response) => {
             localStorage.setItem(ID_TOKEN_KEY, response.data.token);
-            if (cb !== undefined) cb()
-        });
+            if (success !== undefined) success()
+        })
+        .catch((response) => {
+            if (error !== undefined) error(response.response.data)
+        })
 }
 
 var logout = (cb) => {
@@ -26,6 +31,7 @@ var logout = (cb) => {
     if (cb !== undefined) cb()
 }
 
+window.login = login
 var getIdToken = () => localStorage.getItem(ID_TOKEN_KEY);
 
 var getAccessToken = () => localStorage.getItem(ACCESS_TOKEN_KEY);
