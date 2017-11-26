@@ -20,14 +20,16 @@ class ContactItem extends Component
         return (
             <li className="list-group-item">
                 {this.props.contactData.name}
-                <button className="btn btn-outline-danger float-right"
+		<div className='pull-right'>
+                <button className="btn btn-sm btn-primary"
                     onClick={this.handleEditClick.bind(this)}>
                     <span className="glyphicon glyphicon-edit"></span>
                 </button>
-                <button className="btn btn-outline-danger float-right"
+                <button className="btn btn-sm btn-danger"
                     onClick={this.handleDeleteClick.bind(this)}>
                     <span className="glyphicon glyphicon-remove"></span>
                 </button>
+		</div>
             </li>
         )
     }
@@ -190,17 +192,21 @@ class Contacts extends Component {
             }
         );
         return (
-            <div>
+            <div className='container'>
                 <div className="col-md-12">
                     <div className="jumbotron">
-                        <h1>Contact List</h1>
+                        <h3>Contact List</h3>
                     </div>
                 </div>
-                <div className="col-md-6 col-md-offset-3">
+		<div className='row'>
+                <div className="col-md-6">
                     <ul className="list-group">
                         {items}
                     </ul>
+                </div>
+                <div className="col-md-6">
                     <ContactInput addContact={this.addContact.bind(this)}/>
+                </div>
                 </div>
             </div>
         );
