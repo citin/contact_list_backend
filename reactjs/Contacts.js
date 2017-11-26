@@ -5,7 +5,12 @@ import { getIt, postIt, deleteIt } from './utils/ApiConnector';
 class ContactItem extends Component
 {
 
-    handleClick()
+    handleEditClick()
+    {
+	// redirect to edit
+    }
+
+    handleDeleteClick()
     {
         this.props.deleteContact(this.props.contactData.id);
     }
@@ -16,8 +21,12 @@ class ContactItem extends Component
             <li className="list-group-item">
                 {this.props.contactData.name}
                 <button className="btn btn-outline-danger float-right"
-                    onClick={this.handleClick.bind(this)}>
-                    X
+                    onClick={this.handleEditClick.bind(this)}>
+                    <span className="glyphicon glyphicon-edit"></span>
+                </button>
+                <button className="btn btn-outline-danger float-right"
+                    onClick={this.handleDeleteClick.bind(this)}>
+                    <span className="glyphicon glyphicon-remove"></span>
                 </button>
             </li>
         )
@@ -28,16 +37,17 @@ class ContactInput extends Component {
     constructor(props)
     {
         super(props)
-        this.state = {contactName: ''};
+        this.state = {contactName: '', contactEmail: '', contactPhoneNumber: '', contactTags: '[]'};
     }
 
     handleSubmit(event)
     {
         event.preventDefault();
 
+        // Contact validations
         if (Boolean(this.state.contactName) === true)
         {
-            this.props.addContact(this.state.contactName);
+            this.props.addContact(this.state.contactName, this.state.contactEmail, this.state.contactPhoneNumber, this.state.contactTags);
             this.setState({
                 contactName: '',
                 hasErrors: false,
@@ -47,12 +57,13 @@ class ContactInput extends Component {
         }
     }
 
-    updateState(event)
+    updateState(e)
     {
-        this.setState({
-            contactName: event.target.value,
-            hasErrors: !Boolean(this.state.contactName),
-        });
+        // this.setState({
+        //     contactName: event.target.value,
+        //     hasErrors: !Boolean(this.state.contactName),
+        // });
+        this.setState({[e.target.name]: e.target.value});
     }
 
     inputClass()
@@ -63,13 +74,37 @@ class ContactInput extends Component {
     render()
     {
         return (
+          <div className="panel panel-default">
+          <div className="panel-heading">Nuevo Contacto</div>
+          <div className="panel-body">
             <form onSubmit={this.handleSubmit.bind(this)}>
-
                 <div className="form-group">
+                    <label>Nombre: </label>
                     <input type='text'
                         className={this.inputClass()}
                         name='contactName'
                         value={this.state.contactName}
+                        onChange={this.updateState.bind(this)}/>
+
+                    <label>Email: </label>
+                    <input type='text'
+                        className={this.inputClass()}
+                        name='contactEmail'
+                        value={this.state.contactEmail}
+                        onChange={this.updateState.bind(this)}/>
+
+                    <label>Telefono: </label>
+                    <input type='text'
+                        className={this.inputClass()}
+                        name='contactPhoneNumber'
+                        value={this.state.contactPhoneNumber}
+                        onChange={this.updateState.bind(this)}/>
+
+                    <label>Tags: </label>
+	  	    <select className="form-control" // multiple="multiple"
+                        className={this.inputClass()}
+                        name='contactTags'
+                        value={this.state.contactTags}
                         onChange={this.updateState.bind(this)}/>
 
                 </div>
@@ -77,6 +112,8 @@ class ContactInput extends Component {
                     <input className="btn btn-success" type="submit" value="Add"/>
                 </div>
             </form>
+          </div>
+          </div>
         )
     }
 }
@@ -112,12 +149,13 @@ class Contacts extends Component {
             })
     }
 
-    addContact(name)
+    addContact(name, email, phone, tags)
     {
         var formData  = new FormData();
         formData.append('name', name);
-        formData.append('email', name + '@dominio.com');
-        formData.append('tags', '["apple", "banana", "orange"]');
+        formData.append('email', email);
+        formData.append('phone', phone);
+        formData.append('tags', tags)//'["apple", "banana", "orange"]');
         formData.append('csrftoken', csrf());
 
         postIt('api/contacts/', formData, 'multipart/form-data')
@@ -171,5 +209,6 @@ class Contacts extends Component {
 
 export default Contacts;
 export {
-    Contacts
+    Contacts,
+    ContactInput
 };
