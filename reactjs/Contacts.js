@@ -1,13 +1,27 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types'
 import { getIdToken, csrf } from './utils/AuthService';
 import { getIt, postIt, deleteIt } from './utils/ApiConnector';
+import { Redirect, withRouter } from 'react-router-dom'
 
 class ContactItem extends Component
 {
 
+    static propTypes = {
+        match: PropTypes.object.isRequired,
+        location: PropTypes.object.isRequired,
+        history: PropTypes.object.isRequired,
+    }
+
+    constructor(props)
+    {
+        super(props)
+    }
+
     handleEditClick()
     {
-	// redirect to edit
+      this.props.history.push('contacts/' + this.props.contactData.id + '/edit/')
+      // this.props.history.push('/campaigns')
     }
 
     handleDeleteClick()
@@ -35,11 +49,13 @@ class ContactItem extends Component
     }
 }
 
+const ContactItemWithRouter = withRouter(ContactItem)
+
 class ContactInput extends Component {
     constructor(props)
     {
         super(props)
-        this.state = {contactName: '', contactEmail: '', contactPhoneNumber: '', contactTags: '[]'};
+        this.state = {contactName: '', contactEmail: '', contactPhoneNumber: '', contactTags: ''};
     }
 
     handleSubmit(event)
@@ -103,12 +119,11 @@ class ContactInput extends Component {
                         onChange={this.updateState.bind(this)}/>
 
                     <label>Tags: </label>
-	  	    <select className="form-control" // multiple="multiple"
+                    <input type='text'
                         className={this.inputClass()}
                         name='contactTags'
                         value={this.state.contactTags}
                         onChange={this.updateState.bind(this)}/>
-
                 </div>
                 <div className="form-group">
                     <input className="btn btn-success" type="submit" value="Add"/>
@@ -157,7 +172,7 @@ class Contacts extends Component {
         formData.append('name', name);
         formData.append('email', email);
         formData.append('phone', phone);
-        formData.append('tags', tags)//'["apple", "banana", "orange"]');
+        formData.append('tags', JSON.stringify( tags.split(', '))) //'["apple", "banana", "orange"]');
         formData.append('csrftoken', csrf());
 
         postIt('api/contacts/', formData, 'multipart/form-data')
@@ -186,7 +201,7 @@ class Contacts extends Component {
     {
         const items = (this.state.contactsData || []).map(
             (contactData) => {
-                return <ContactItem key={contactData.id.toString()}
+                return <ContactItemWithRouter key={contactData.id.toString()}
                     contactData={contactData}
                     deleteContact={this.deleteContact.bind(this)}/>
             }

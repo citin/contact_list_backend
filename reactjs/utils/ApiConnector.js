@@ -23,8 +23,14 @@ var deleteIt = (resource) => {
     return axios.delete(resource)
 }
 
+var patchIt = (resource, body) => {
+    reload_conf()
+    return axios.put(resource, body)
+}
+
 export {
     deleteIt,
     getIt,
     postIt,
+    patchIt,
 }
