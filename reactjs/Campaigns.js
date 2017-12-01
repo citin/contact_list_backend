@@ -1,13 +1,29 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types'
+import { getIdToken, csrf } from './utils/AuthService';
+import { getIt, postIt, deleteIt } from './utils/ApiConnector';
+import { Redirect, withRouter } from 'react-router-dom'
 
-// todo: reemplazar por repo remoto
-var campaignosData = [
-    {id: 1, name: 'No salve a las ballenas, o acaso a usted alguna vez lo salvo una?'},
-    {id: 2, name: 'Grin Pis'},
-];
+class CampaignItem extends Component
+{
 
-class CampaignItem extends Component {
-    handleClick()
+    static propTypes = {
+        match: PropTypes.object.isRequired,
+        location: PropTypes.object.isRequired,
+        history: PropTypes.object.isRequired,
+    }
+
+    constructor(props)
+    {
+        super(props)
+    }
+
+    handleEditClick()
+    {
+      this.props.history.push('campaigns/' + this.props.campaignData.id + '/edit/')
+    }
+
+    handleDeleteClick()
     {
         this.props.deleteCampaign(this.props.campaignData.id);
     }
@@ -16,30 +32,39 @@ class CampaignItem extends Component {
     {
         return (
             <li className="list-group-item">
-                {this.props.campaignData.name}
-                <button className="btn btn-outline-danger float-right"
-                        onClick={this.handleClick.bind(this)}>
-                    X
+                {this.props.campaignData.title}
+		<div className='pull-right'>
+                <button className="btn btn-sm btn-primary"
+                    onClick={this.handleEditClick.bind(this)}>
+                    <span className="glyphicon glyphicon-edit"></span>
                 </button>
+                <button className="btn btn-sm btn-danger"
+                    onClick={this.handleDeleteClick.bind(this)}>
+                    <span className="glyphicon glyphicon-remove"></span>
+                </button>
+		</div>
             </li>
         )
     }
 }
 
+const CampaignItemWithRouter = withRouter(CampaignItem)
+
 class CampaignInput extends Component {
     constructor(props)
     {
         super(props)
-        this.state = {campaignName: ''};
+        this.state = {campaignTitle: '', campaignBody: ''};
     }
 
     handleSubmit(event)
     {
         event.preventDefault();
 
-        if (Boolean(this.state.campaignName) === true)
+        // Campaign validations
+        if (Boolean(this.state.campaignTitle) === true)
         {
-            this.props.addCampaign(this.state.campaignName);
+            this.props.addCampaign(this.state.campaignTitle, this.state.campaignBody );
             this.setState({
                 campaignName: '',
                 hasErrors: false,
@@ -49,12 +74,13 @@ class CampaignInput extends Component {
         }
     }
 
-    updateState(event)
+    updateState(e)
     {
-        this.setState({
-            campaignName: event.target.value,
-            hasErrors: !Boolean(this.state.campaignName),
-        });
+        // this.setState({
+        //     campaignName: event.target.value,
+        //     hasErrors: !Boolean(this.state.campaignName),
+        // });
+        this.setState({[e.target.name]: e.target.value});
     }
 
     inputClass()
@@ -65,42 +91,75 @@ class CampaignInput extends Component {
     render()
     {
         return (
-            <form className="campaign-input-wrapper form-group"
-                  onSubmit={this.handleSubmit.bind(this)}>
+          <div className="panel panel-default">
+          <div className="panel-heading">Nueva Campaña</div>
+          <div className="panel-body">
+            <form onSubmit={this.handleSubmit.bind(this)}>
+                <div className="form-group">
+                    <label>Title: </label>
+                    <input type='text'
+                        className={this.inputClass()}
+                        name='campaignTitle'
+                        value={this.state.campaignTitle}
+                        onChange={this.updateState.bind(this)}/>
 
-                  <input type='text'
-                         className={this.inputClass()}
-                         name='campaignName'
-                         value={this.state.campaignName}
-                         onChange={this.updateState.bind(this)}/>
-
-                <button className="btn btn-outline-success" type="submit">
-                    Add
-                </button>
+                    <label>Body: </label>
+                    <input type='text'
+                        className={this.inputClass()}
+                        name='campaignBody'
+                        value={this.state.campaignBody}
+                        onChange={this.updateState.bind(this)}/>
+                </div>
+                <div className="form-group">
+                    <input className="btn btn-success" type="submit" value="Add"/>
+                </div>
             </form>
+          </div>
+          </div>
         )
     }
 }
 
 class Campaigns extends Component {
+
     constructor(props)
     {
         super(props)
-        this.state = {campaignsData: campaignosData}
+        this.state = {campaignsData: [] }
+    }
+
+    all()
+    {
+        getIt('api/campaigns/')
+            .then((campaigns) => {
+                this.setState({ campaignsData: campaigns.data })
+            })
+    }
+
+    componentDidMount() {
+        this.all()
     }
 
     deleteCampaign(campaignPk)
     {
-        let filtered = this.state.campaignsData.filter(
-            campaign => campaign.id !== campaignPk
-        );
-        this.setState({campaignsData: filtered})
+        deleteIt(`api/campaigns/${campaignPk}/`)
+            .then(() => {
+                let filtered = this.state.campaignsData.filter(
+                    campaign => campaign.id !== campaignPk
+                );
+                this.setState({campaignsData: filtered})
+            })
     }
 
-    addCampaign(name)
+    addCampaign(title, body)
     {
-        this.state.campaignsData.push({id: this.maxId() + 1, name: name});
-        this.setState({campaignsData: this.state.campaignsData})
+        var formData  = new FormData();
+        formData.append('title', title);
+        formData.append('body', body);
+        formData.append('csrftoken', csrf());
+
+        postIt('api/campaigns/', formData, 'multipart/form-data')
+            .then(() => this.all())
     }
 
     count()
@@ -125,21 +184,28 @@ class Campaigns extends Component {
     {
         const items = (this.state.campaignsData || []).map(
             (campaignData) => {
-                return <CampaignItem key={campaignData.id.toString()}
-                                    campaignData={campaignData}
-                                    deleteCampaign={this.deleteCampaign.bind(this)}/>
-
+                return <CampaignItemWithRouter key={campaignData.id.toString()}
+                    campaignData={campaignData}
+                    deleteCampaign={this.deleteCampaign.bind(this)}/>
             }
         );
         return (
-            <div className="App">
-                <div className="jumbotron">
-                    <h1>Campaign List</h1>
+            <div className='container'>
+                <div className="col-md-12">
+                    <div className="jumbotron">
+                        <h3>Campaign List</h3>
+                    </div>
                 </div>
-                <ul className="list-group d-inline-flex p-4">
-                    {items}
-                </ul>
-                <CampaignInput addCampaign={this.addCampaign.bind(this)}/>
+		<div className='row'>
+                <div className="col-md-6">
+                    <ul className="list-group">
+                        {items}
+                    </ul>
+                </div>
+                <div className="col-md-6">
+                    <CampaignInput addCampaign={this.addCampaign.bind(this)}/>
+                </div>
+                </div>
             </div>
         );
     }
@@ -147,5 +213,6 @@ class Campaigns extends Component {
 
 export default Campaigns;
 export {
-    Campaigns
+    Campaigns,
+    CampaignInput
 };

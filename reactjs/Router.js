@@ -7,23 +7,25 @@ import {
 
 import Callback from './Callback'
 import Campaigns from './Campaigns'
+import CampaignEdit from './CampaignEdit'
 import Contacts from './Contacts'
 import ContactEdit from './ContactEdit'
 import Layout from './Layout'
 import LogIn from './LogIn'
 import PrivateRoute from './utils/PrivateRoute'
 
-const Home = () => <div> Bienvenidos </div>;
+const Home = () => <div className='container'> Bienvenidos </div>;
 
 const AppRouter = () => (
     <Router>
         <div>
             <Layout/>
-            <div className="row">
+            <div className="container">
                 <Route exact path="/" component={Home} />
                 <PrivateRoute exact path="/contacts" component={Contacts} />
                 <PrivateRoute exact path="/contacts/:id/edit" component={ContactEdit} />
-                <Route path="/campaigns" component={Campaigns} />
+                <PrivateRoute exact path="/campaigns" component={Campaigns} />
+                <PrivateRoute exact path="/campaigns/:id/edit" component={CampaignEdit} />
                 <Route path="/callback" component={Callback} />
                 <Route path="/login" component={LogIn} />
             </div>
