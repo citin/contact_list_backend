@@ -208,15 +208,15 @@ class Contacts extends Component {
         );
         return (
             <div className='container'>
-                <div className="col-md-12">
-                    <div className="jumbotron">
-                        <h3>Contact List</h3>
-                    </div>
-                </div>
 		<div className='row'>
                 <div className="col-md-6">
                     <ul className="list-group">
+                      <div className="panel panel-default">
+                      <div className="panel-heading">List</div>
+                      <div className="panel-body">
                         {items}
+                      </div>
+                      </div>
                     </ul>
                 </div>
                 <div className="col-md-6">

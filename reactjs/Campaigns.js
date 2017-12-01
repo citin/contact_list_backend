@@ -3,6 +3,35 @@ import PropTypes from 'prop-types'
 import { getIdToken, csrf } from './utils/AuthService';
 import { getIt, postIt, deleteIt } from './utils/ApiConnector';
 import { Redirect, withRouter } from 'react-router-dom'
+import RichTextEditor from 'react-rte';
+
+class MyStatefulEditor extends Component {
+  static propTypes = {
+    onChange: PropTypes.func
+  };
+
+  state = {
+    value: RichTextEditor.createEmptyValue()
+  }
+
+  onChange = (value) => {
+    this.setState({value});
+    if (this.props.onChange) {
+      this.props.onChange(
+        value.toString('html')
+      );
+    }
+  };
+
+  render () {
+    return (
+      <RichTextEditor
+        value={this.state.value}
+        onChange={this.onChange}
+      />
+    );
+  }
+}
 
 class CampaignItem extends Component
 {
@@ -76,11 +105,12 @@ class CampaignInput extends Component {
 
     updateState(e)
     {
-        // this.setState({
-        //     campaignName: event.target.value,
-        //     hasErrors: !Boolean(this.state.campaignName),
-        // });
         this.setState({[e.target.name]: e.target.value});
+    }
+
+    updateBodyState(e)
+    {
+        this.setState({campaignBody: e});
     }
 
     inputClass()
@@ -104,11 +134,10 @@ class CampaignInput extends Component {
                         onChange={this.updateState.bind(this)}/>
 
                     <label>Body: </label>
-                    <input type='text'
+                    <MyStatefulEditor
                         className={this.inputClass()}
                         name='campaignBody'
-                        value={this.state.campaignBody}
-                        onChange={this.updateState.bind(this)}/>
+                        onChange={this.updateBodyState.bind(this)}/>
                 </div>
                 <div className="form-group">
                     <input className="btn btn-success" type="submit" value="Add"/>
@@ -191,19 +220,19 @@ class Campaigns extends Component {
         );
         return (
             <div className='container'>
-                <div className="col-md-12">
-                    <div className="jumbotron">
-                        <h3>Campaign List</h3>
-                    </div>
-                </div>
 		<div className='row'>
-                <div className="col-md-6">
-                    <ul className="list-group">
-                        {items}
-                    </ul>
-                </div>
-                <div className="col-md-6">
+                <div className="col-md-12">
                     <CampaignInput addCampaign={this.addCampaign.bind(this)}/>
+                </div>
+                <div className="col-md-12">
+                    <ul className="list-group">
+                      <div className="panel panel-default">
+                      <div className="panel-heading">List</div>
+                      <div className="panel-body">
+                        {items}
+                     </div>
+                     </div>
+                    </ul>
                 </div>
                 </div>
             </div>
@@ -214,5 +243,6 @@ class Campaigns extends Component {
 export default Campaigns;
 export {
     Campaigns,
-    CampaignInput
+    CampaignInput,
+    MyStatefulEditor
 };
