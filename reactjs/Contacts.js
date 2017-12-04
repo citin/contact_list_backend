@@ -20,8 +20,7 @@ class ContactItem extends Component
 
     handleEditClick()
     {
-      this.props.history.push('contacts/' + this.props.contactData.id + '/edit/')
-      // this.props.history.push('/campaigns')
+      this.props.history.push(`contacts/${this.props.contactData.id}/edit/`)
     }
 
     handleDeleteClick()
@@ -65,7 +64,12 @@ class ContactInput extends Component {
         // Contact validations
         if (Boolean(this.state.contactName) === true)
         {
-            this.props.addContact(this.state.contactName, this.state.contactEmail, this.state.contactPhoneNumber, this.state.contactTags);
+            this.props.addContact(
+                this.state.contactName,
+                this.state.contactEmail,
+                this.state.contactPhoneNumber,
+                this.state.contactTags
+            );
             this.setState({
                 contactName: '',
                 hasErrors: false,
@@ -173,7 +177,7 @@ class Contacts extends Component {
         formData.append('email', email);
         formData.append('phone', phone);
         formData.append('tags', JSON.stringify( tags.split(', '))) //'["apple", "banana", "orange"]');
-        formData.append('csrftoken', csrf());
+        formData.append('csrfmiddlewaretoken', csrf());
 
         postIt('api/contacts/', formData, 'multipart/form-data')
             .then(() => this.all())

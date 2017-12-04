@@ -6,62 +6,67 @@ import { getIt, postIt, deleteIt } from './utils/ApiConnector';
 
 
 const TagSearch = createClass({
-	displayName: 'TagSearch',
-	propTypes: {
-		label: PropTypes.string,
-	},
-	getInitialState () {
-		return {
-			backspaceRemoves: true,
-			multi: true,
-			value: '',
-			creatable: false,
-		};
-	},
-	onChange (value) {
-		this.setState({
-			value: value,
-		});
-              this.props.onChange(value)
-	},
 
-        filterOptions (options, filter, currentValues)
+    displayName: 'TagSearch',
+
+    propTypes: {
+        label: PropTypes.string,
+    },
+
+    getInitialState () {
+        return {
+            backspaceRemoves: true,
+            multi: true,
+            value: '',
+            creatable: false,
+        };
+    },
+
+    onChange (value) {
+        this.setState({ value: value });
+        this.props.onChange(value)
+    },
+
+    filterOptions (options, filter, currentValues)
+    {
+        return options // custom filter in backend
+    },
+
+    getUsers (input) {
+
+        if (input.length < 3)
         {
-            // custom filter in backend
-            return options
-        },
-	getUsers (input) {
-		if (!input) {
-			return Promise.resolve({ options: [] });
-		}
+            return Promise.resolve({ options: [] });
+        }
 
-                return Promise.resolve( { options: [{"email": "uno@dos.com", "label": "Juan Tobillo"}, {"email": "loco@re.com", label: "Mario Bross"}] })
-		// return getIt('api/contacts/search?query=' + input + '/')
-		// .then((response) => {
-                //         console.log(response.data)
-		// 	return { options: response.data };
-		// });
+        var fd = new FormData();
+        fd.append('csrfmiddlewaretoken', csrf())
+        fd.append('tags', input)
 
-	},
-	render () {
-		const AsyncComponent = this.state.creatable
-			? Select.AsyncCreatable
-			: Select.Async;
+        return postIt('/contacts_by_tags', fd)
+            .then(data  => { return { options: data.data['contacts'] } })
+            .catch(data => { return { options: [] } })
 
-		return (
-			<div className="section">
-				<h3 className="section-heading">{this.props.label} <a href=""></a></h3>
-				<AsyncComponent 
-					multi={this.state.multi} 
-					value={this.state.value} 
-					onChange={this.onChange} 		
-                                        filterOptions={this.filterOptions}
-					valueKey="email" 
-					labelKey="label" loadOptions={this.getUsers} 
-				/>
-			</div>
-		);
-	}
+    },
+    render () {
+        const AsyncComponent = this.state.creatable
+            ? Select.AsyncCreatable
+            : Select.Async;
+
+        return (
+            <div className="section">
+                <h3 className="section-heading">{this.props.label} <a href=""></a></h3>
+                <AsyncComponent
+                    multi={this.state.multi}
+                    value={this.state.value}
+                    onChange={this.onChange}
+                    filterOptions={this.filterOptions}
+                    valueKey="email"
+                    labelKey="label" loadOptions={this.getUsers}
+                />
+            </div>
+        );
+    }
 });
 
 module.exports = TagSearch;

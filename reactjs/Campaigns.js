@@ -55,7 +55,10 @@ class CampaignItem extends Component
 
     handleDeleteClick()
     {
-        this.props.deleteCampaign(this.props.campaignData.id);
+        if (confirm('Seguro que desea borrar esta campana?'))
+        {
+            this.props.deleteCampaign(this.props.campaignData.id);
+        }
     }
 
     handleSendClick()
@@ -93,7 +96,12 @@ class CampaignInput extends Component {
     constructor(props)
     {
         super(props)
-        this.state = {campaignTitle: '', campaignBody: '', query: '', campaignEmails: ''};
+        this.state = {
+            campaignTitle: '',
+            campaignBody: '',
+            query: '',
+            campaignEmails: ''
+        };
     }
 
     handleSubmit(event)
@@ -103,7 +111,11 @@ class CampaignInput extends Component {
         // Campaign validations
         if (Boolean(this.state.campaignTitle) === true)
         {
-            this.props.addCampaign(this.state.campaignTitle, this.state.campaignBody, this.state.campaignEmails );
+            this.props.addCampaign(
+                this.state.campaignTitle,
+                this.state.campaignBody,
+                this.state.campaignEmails
+            );
             this.setState({
                 campaignName: '',
                 hasErrors: false,
