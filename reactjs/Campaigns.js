@@ -4,6 +4,7 @@ import { getIdToken, csrf } from './utils/AuthService';
 import { getIt, postIt, deleteIt } from './utils/ApiConnector';
 import { Redirect, withRouter } from 'react-router-dom'
 import RichTextEditor from 'react-rte';
+import TagSearch from './TagSearch';
 
 class MyStatefulEditor extends Component {
   static propTypes = {
@@ -57,6 +58,11 @@ class CampaignItem extends Component
         this.props.deleteCampaign(this.props.campaignData.id);
     }
 
+    handleSendClick()
+    {
+        getIt('campaigns/' + this.props.campaignData.id + '/send/')
+    }
+
     render()
     {
         return (
@@ -71,6 +77,10 @@ class CampaignItem extends Component
                     onClick={this.handleDeleteClick.bind(this)}>
                     <span className="glyphicon glyphicon-remove"></span>
                 </button>
+                <button className="btn btn-sm btn-success"
+                    onClick={this.handleSendClick.bind(this)}>
+                    <span className="glyphicon glyphicon-send"></span>
+                </button>
 		</div>
             </li>
         )
@@ -83,7 +93,7 @@ class CampaignInput extends Component {
     constructor(props)
     {
         super(props)
-        this.state = {campaignTitle: '', campaignBody: ''};
+        this.state = {campaignTitle: '', campaignBody: '', query: '', campaignEmails: ''};
     }
 
     handleSubmit(event)
@@ -93,7 +103,7 @@ class CampaignInput extends Component {
         // Campaign validations
         if (Boolean(this.state.campaignTitle) === true)
         {
-            this.props.addCampaign(this.state.campaignTitle, this.state.campaignBody );
+            this.props.addCampaign(this.state.campaignTitle, this.state.campaignBody, this.state.campaignEmails );
             this.setState({
                 campaignName: '',
                 hasErrors: false,
@@ -111,6 +121,12 @@ class CampaignInput extends Component {
     updateBodyState(e)
     {
         this.setState({campaignBody: e});
+    }
+
+    updateEmails(e)
+    {
+      console.log('paso')
+        this.setState({campaignEmails: e});
     }
 
     inputClass()
@@ -138,7 +154,9 @@ class CampaignInput extends Component {
                         className={this.inputClass()}
                         name='campaignBody'
                         onChange={this.updateBodyState.bind(this)}/>
+                        <TagSearch onChange={this.updateEmails.bind(this) } />
                 </div>
+
                 <div className="form-group">
                     <input className="btn btn-success" type="submit" value="Add"/>
                 </div>
@@ -180,11 +198,12 @@ class Campaigns extends Component {
             })
     }
 
-    addCampaign(title, body)
+    addCampaign(title, body, emails)
     {
         var formData  = new FormData();
         formData.append('title', title);
         formData.append('body', body);
+        formData.append('emails', emails);
         formData.append('csrftoken', csrf());
 
         postIt('api/campaigns/', formData, 'multipart/form-data')
