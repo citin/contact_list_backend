@@ -1,13 +1,21 @@
 <!doctype html>
 <html class="no-js" lang="">
-    <head>
-        <meta charset="utf-8">
-        <title>Campaigns App</title>
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <meta name="csrftoken" id="csrftoken" content="{{ csrf_token }}">
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    </head>
-    <body>
-        {% block main %}{% endblock %}
-    </body>
+  <head>
+    <meta charset="utf-8">
+    <title>Campaigns App</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="csrftoken" id="csrftoken" content="{{ csrf_token }}">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <script src="https://unpkg.com/react@15.6.1/dist/react.js"></script>
+    <script src="https://unpkg.com/react-dom@15.6.1/dist/react-dom.js"></script>
+    <script src="https://unpkg.com/prop-types@15.5.10/prop-types.js"></script>
+    <script src="https://unpkg.com/classnames@2.2.5/index.js"></script>
+    <script src="https://unpkg.com/react-input-autosize@2.0.0/dist/react-input-autosize.js"></script>
+    <script src="https://unpkg.com/react-select/dist/react-select.js"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/react-select/dist/react-select.css">
+  </head>
+  <body>
+    {% block main %}{% endblock %}
+  </body>
 </html>
