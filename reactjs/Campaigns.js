@@ -7,31 +7,31 @@ import RichTextEditor from 'react-rte';
 import TagSearch from './TagSearch';
 
 class MyStatefulEditor extends Component {
-  static propTypes = {
-    onChange: PropTypes.func
-  };
+    static propTypes = {
+        onChange: PropTypes.func
+    };
 
-  state = {
-    value: RichTextEditor.createEmptyValue()
-  }
-
-  onChange = (value) => {
-    this.setState({value});
-    if (this.props.onChange) {
-      this.props.onChange(
-        value.toString('html')
-      );
+    state = {
+        value: RichTextEditor.createEmptyValue()
     }
-  };
 
-  render () {
-    return (
-      <RichTextEditor
-        value={this.state.value}
-        onChange={this.onChange}
-      />
-    );
-  }
+    onChange = (value) => {
+        this.setState({value});
+        if (this.props.onChange) {
+            this.props.onChange(
+                value.toString('html')
+            );
+        }
+    };
+
+    render () {
+        return (
+            <RichTextEditor
+                value={this.state.value}
+                onChange={this.onChange}
+            />
+        );
+    }
 }
 
 class CampaignItem extends Component
@@ -50,7 +50,7 @@ class CampaignItem extends Component
 
     handleEditClick()
     {
-      this.props.history.push('campaigns/' + this.props.campaignData.id + '/edit/')
+        this.props.history.push('campaigns/' + this.props.campaignData.id + '/edit/')
     }
 
     handleDeleteClick()
@@ -63,7 +63,12 @@ class CampaignItem extends Component
 
     handleSendClick()
     {
-        getIt('campaigns/' + this.props.campaignData.id + '/send/')
+        var fd = new FormData();
+        fd.append('csrfmiddlewaretoken', csrf());
+
+        postIt(`campaigns/${this.props.campaignData.id}/send/`, fd)
+            .then(data => console.log(data))
+            .catch(data => console.log(data));
     }
 
     render()
@@ -71,20 +76,20 @@ class CampaignItem extends Component
         return (
             <li className="list-group-item">
                 {this.props.campaignData.title}
-		<div className='pull-right'>
-                <button className="btn btn-sm btn-primary"
-                    onClick={this.handleEditClick.bind(this)}>
-                    <span className="glyphicon glyphicon-edit"></span>
-                </button>
-                <button className="btn btn-sm btn-danger"
-                    onClick={this.handleDeleteClick.bind(this)}>
-                    <span className="glyphicon glyphicon-remove"></span>
-                </button>
-                <button className="btn btn-sm btn-success"
-                    onClick={this.handleSendClick.bind(this)}>
-                    <span className="glyphicon glyphicon-send"></span>
-                </button>
-		</div>
+                <div className='pull-right'>
+                    <button className="btn btn-sm btn-primary"
+                        onClick={this.handleEditClick.bind(this)}>
+                        <span className="glyphicon glyphicon-edit"></span>
+                    </button>
+                    <button className="btn btn-sm btn-danger"
+                        onClick={this.handleDeleteClick.bind(this)}>
+                        <span className="glyphicon glyphicon-remove"></span>
+                    </button>
+                    <button className="btn btn-sm btn-success"
+                        onClick={this.handleSendClick.bind(this)}>
+                        <span className="glyphicon glyphicon-send"></span>
+                    </button>
+                </div>
             </li>
         )
     }
@@ -98,6 +103,7 @@ class CampaignInput extends Component {
         super(props)
         this.state = {
             campaignTitle: '',
+            campaignSubject: '',
             campaignBody: '',
             query: '',
             campaignEmails: ''
@@ -137,7 +143,6 @@ class CampaignInput extends Component {
 
     updateEmails(e)
     {
-      console.log('paso')
         this.setState({campaignEmails: e});
     }
 
@@ -146,35 +151,48 @@ class CampaignInput extends Component {
         return 'form-control ' + (this.state.hasErrors ? 'is-invalid' : '');
     }
 
+    componentDidMount()
+    {
+        this.titleInput.focus();
+    }
+
     render()
     {
         return (
-          <div className="panel panel-default">
-          <div className="panel-heading">Nueva Campaña</div>
-          <div className="panel-body">
-            <form onSubmit={this.handleSubmit.bind(this)}>
-                <div className="form-group">
-                    <label>Title: </label>
-                    <input type='text'
-                        className={this.inputClass()}
-                        name='campaignTitle'
-                        value={this.state.campaignTitle}
-                        onChange={this.updateState.bind(this)}/>
+            <div className="panel panel-default">
+                <div className="panel-heading">Nueva Campaña</div>
+                <div className="panel-body">
+                    <form onSubmit={this.handleSubmit.bind(this)}>
+                        <div className="form-group">
+                            <label>Title: </label>
+                            <input type='text'
+                                className={this.inputClass()}
+                                ref={(input) => { this.titleInput = input; }}
+                                name='campaignTitle'
+                                value={this.state.campaignTitle}
+                                onChange={this.updateState.bind(this)}/>
 
-                    <label>Body: </label>
-                    <MyStatefulEditor
-                        className={this.inputClass()}
-                        name='campaignBody'
-                        onChange={this.updateBodyState.bind(this)}/>
-                        <TagSearch onChange={this.updateEmails.bind(this) } />
-                </div>
+                            <label>Subject: </label>
+                            <input type='text'
+                                className={this.inputClass()}
+                                name='campaignSubject'
+                                value={this.state.campaignSubject}
+                                onChange={this.updateState.bind(this)}/>
 
-                <div className="form-group">
-                    <input className="btn btn-success" type="submit" value="Add"/>
+                            <label>Body: </label>
+                            <MyStatefulEditor
+                                className={this.inputClass()}
+                                name='campaignBody'
+                                onChange={this.updateBodyState.bind(this)}/>
+                            <TagSearch onChange={this.updateEmails.bind(this) } />
+                        </div>
+
+                        <div className="form-group">
+                            <input className="btn btn-success" type="submit" value="Add"/>
+                        </div>
+                    </form>
                 </div>
-            </form>
-          </div>
-          </div>
+            </div>
         )
     }
 }
@@ -251,20 +269,20 @@ class Campaigns extends Component {
         );
         return (
             <div className='container'>
-		<div className='row'>
-                <div className="col-md-12">
-                    <CampaignInput addCampaign={this.addCampaign.bind(this)}/>
-                </div>
-                <div className="col-md-12">
-                    <ul className="list-group">
-                      <div className="panel panel-default">
-                      <div className="panel-heading">List</div>
-                      <div className="panel-body">
-                        {items}
-                     </div>
-                     </div>
-                    </ul>
-                </div>
+                <div className='row'>
+                    <div className="col-md-12">
+                        <CampaignInput addCampaign={this.addCampaign.bind(this)}/>
+                    </div>
+                    <div className="col-md-12">
+                        <ul className="list-group">
+                            <div className="panel panel-default">
+                                <div className="panel-heading">List</div>
+                                <div className="panel-body">
+                                    {items}
+                                </div>
+                            </div>
+                        </ul>
+                    </div>
                 </div>
             </div>
         );

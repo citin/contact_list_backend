@@ -64,6 +64,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 # CORS_ORIGIN_WHITELIST = (
 #     'localhost:3000',
 #     '127.0.0.1:3000'

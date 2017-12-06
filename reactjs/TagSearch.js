@@ -2,6 +2,7 @@ import React from 'react';
 import createClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
+import { csrf } from './utils/AuthService';
 import { getIt, postIt, deleteIt } from './utils/ApiConnector';
 
 

@@ -54,6 +54,11 @@ class BaseLogIn extends Component
         this.setState({ password: event.target.value });
     }
 
+    componentDidMount()
+    {
+        this.userNameInput.focus();
+    }
+
     render() {
         return (
             !isLoggedIn()
@@ -67,6 +72,7 @@ class BaseLogIn extends Component
                                 <input type="text"
                                     placeholder="username"
                                     className="form-control"
+                                    ref={(input) => { this.userNameInput = input; }}
                                     value={this.state.username}
                                     onChange={this.updateUsername}/>
                             </div>
