@@ -7,6 +7,7 @@ from rest_framework_jwt.views import obtain_jwt_token
 
 from applications.campaigns.views import CampaignViewSet
 from applications.campaigns.views import SendCampaignView
+from applications.campaigns.views import TrackCampaignView
 from applications.contacts.views import ContactViewSet
 from applications.contacts.views import ContactsByTags
 
@@ -20,6 +21,9 @@ urlpatterns = [
     url(r'^contacts_by_tags$', ContactsByTags.as_view()),
     url(r'^admin/', admin.site.urls),
     url(r'^campaigns/(?P<pk>\d+)/send/', SendCampaignView.as_view()),
+    url(r'^campaigns/(?P<pk>\d+)/track/(?P<user_id>\d+)',
+        TrackCampaignView.as_view(),
+        name='track-campaign'),
     url(r'^api/', include(router.urls)),
     url(r'^api-token-auth/', obtain_jwt_token),
     url(r'^accounts/', include('allauth.urls')),
