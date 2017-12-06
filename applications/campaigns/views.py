@@ -6,10 +6,11 @@ from django.views.generic import View
 
 from rest_framework import viewsets
 
-from applications.contacts.models import Contact
 from applications.campaigns.models import Campaign
 from applications.campaigns.models import CampaignRecord
 from applications.campaigns.serializers import CampaignSerializer
+from applications.contacts.models import Contact
+from applications.contacts.models import ContactsList
 
 
 class CampaignViewSet(viewsets.ModelViewSet):
@@ -18,7 +19,13 @@ class CampaignViewSet(viewsets.ModelViewSet):
     serializer_class = CampaignSerializer
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        instance = serializer.save(user=self.request.user)
+        emails = serializer.initial_data['emails'].split(',')
+        for email in emails:
+            contact = Contact.objects.get(email=email)
+            ContactsList.objects.create(campaign=instance,
+                                        contact=contact)
+        return instance
 
 
 class SendCampaignView(View):

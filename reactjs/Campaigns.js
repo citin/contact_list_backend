@@ -230,11 +230,13 @@ class Campaigns extends Component {
 
     addCampaign(title, body, emails)
     {
-        var formData  = new FormData();
+        var formData = new FormData(),
+            newmails = emails.map(e => e.email).join(',');
+
         formData.append('title', title);
         formData.append('body', body);
-        formData.append('emails', emails);
-        formData.append('csrftoken', csrf());
+        formData.append('emails', newmails);
+        formData.append('csrfmiddlewaretoken', csrf());
 
         postIt('api/campaigns/', formData, 'multipart/form-data')
             .then(() => this.all())
