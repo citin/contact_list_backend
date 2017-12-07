@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.core.mail import send_mass_mail
+from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.views.generic import View
@@ -36,17 +36,19 @@ class SendCampaignView(View):
 
         campaign = Campaign.objects.get(pk=self.kwargs['pk'])
 
-        messages = []
         for contact in campaign.contacts.all():
-            messages.append((campaign.subject,
+
+            sent = send_mail(campaign.subject,
                              campaign.full_body(request, contact.id),
                              campaign.user.email,
-                             [contact.email]))
+                             [contact.email],
+                             fail_silently=False)
 
-        sent = send_mass_mail(messages,
-                              fail_silently=False)
+            CampaignRecord.objects.create(contact=contact,
+                                          campaign=campaign,
+                                          was_sent=bool(sent))
 
-        return JsonResponse({'sent': bool(sent)})
+        return JsonResponse({'sent': True})
 
 
 class TrackCampaignView(View):

@@ -48,6 +48,8 @@ class CampaignRecord(models.Model):
 
     times_opened = models.PositiveIntegerField(default=0)
 
+    was_sent = models.BooleanField(default=False)
+
     def increment_opened(self):
         self.times_opened += 1
         self.save()
