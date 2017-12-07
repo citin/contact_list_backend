@@ -103,6 +103,7 @@ class CampaignInput extends Component {
         super(props)
         this.state = {
             campaignTitle: '',
+            campaignEmail: '',
             campaignSubject: '',
             campaignBody: '',
             query: '',
@@ -120,7 +121,8 @@ class CampaignInput extends Component {
             this.props.addCampaign(
                 this.state.campaignTitle,
                 this.state.campaignBody,
-                this.state.campaignEmails
+                this.state.campaignEmails,
+                this.state.campaignEmail
             );
             this.setState({
                 campaignName: '',
@@ -170,6 +172,13 @@ class CampaignInput extends Component {
                                 ref={(input) => { this.titleInput = input; }}
                                 name='campaignTitle'
                                 value={this.state.campaignTitle}
+                                onChange={this.updateState.bind(this)}/>
+
+                            <label>Email from: </label>
+                            <input type='email'
+                                className={this.inputClass()}
+                                name='campaignEmail'
+                                value={this.state.campaignEmail}
                                 onChange={this.updateState.bind(this)}/>
 
                             <label>Subject: </label>
@@ -228,12 +237,13 @@ class Campaigns extends Component {
             })
     }
 
-    addCampaign(title, body, emails)
+    addCampaign(title, body, emails, email)
     {
         var formData = new FormData(),
             newmails = emails.map(e => e.email).join(',');
 
         formData.append('title', title);
+        formData.append('email', email);
         formData.append('body', body);
         formData.append('emails', newmails);
         formData.append('csrfmiddlewaretoken', csrf());

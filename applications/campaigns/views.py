@@ -33,22 +33,28 @@ class SendCampaignView(View):
     http_method_names = ['post']
 
     def post(self, request, *args, **kwargs):
-
         campaign = Campaign.objects.get(pk=self.kwargs['pk'])
 
-        for contact in campaign.contacts.all():
+        if campaign.was_sent():
+            return JsonResponse({
+                'status': 'error',
+                'error': 'Campaign Has Already been sent.'
+            })
+        else:
 
-            sent = send_mail(campaign.subject,
-                             campaign.full_body(request, contact.id),
-                             campaign.user.email,
-                             [contact.email],
-                             fail_silently=False)
+            for contact in campaign.contacts.all():
 
-            CampaignRecord.objects.create(contact=contact,
-                                          campaign=campaign,
-                                          was_sent=bool(sent))
+                sent = send_mail(campaign.subject,
+                                 campaign.full_body(request, contact.id),
+                                 campaign.user.email,
+                                 [campaign.email],
+                                 fail_silently=False)
 
-        return JsonResponse({'sent': True})
+                CampaignRecord.objects.create(contact=contact,
+                                              campaign=campaign,
+                                              was_sent=bool(sent))
+
+            return JsonResponse({'status': 'success'})
 
 
 class TrackCampaignView(View):
@@ -63,3 +69,28 @@ class TrackCampaignView(View):
         record.increment_opened()
         image_data = open(settings.STATIC_DIR + '/trackme.png', "rb").read()
         return HttpResponse(image_data, content_type="image/png")
+
+
+class CampaignStatsView(View):
+    http_method_names = ['get']
+
+    def get(self, request, *args, **kwargs):
+
+        campaign = Campaign.objects.get(pk=self.kwargs['pk'])
+
+        record_data = {
+            'datetime_sent': campaign.datetime_sent,
+            'times_opened': campaign.records.times_opened(),
+            'successful_email_count': campaign.records.successful_email_count(),
+            'unsuccessful_email_count': campaign.records.unsuccessful_email_count(),
+            'emails': [
+                {
+                    'contact': cr.contact.email,
+                    'sent': cr.was_sent,
+                    'seen': bool(cr.times_opened),
+                    'seen_times': cr.times_opened,
+                } for cr in campaign.campaignrecord_set.all()
+            ]
+        }
+
+        return JsonResponse(record_data)

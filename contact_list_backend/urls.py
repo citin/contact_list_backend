@@ -5,6 +5,7 @@ from django.views.generic import TemplateView
 from rest_framework import routers
 from rest_framework_jwt.views import obtain_jwt_token
 
+from applications.campaigns.views import CampaignStatsView
 from applications.campaigns.views import CampaignViewSet
 from applications.campaigns.views import SendCampaignView
 from applications.campaigns.views import TrackCampaignView
@@ -20,6 +21,9 @@ router.register(r'campaigns', CampaignViewSet)
 urlpatterns = [
     url(r'^contacts_by_tags$', ContactsByTags.as_view()),
     url(r'^admin/', admin.site.urls),
+    url(r'^api/campaigns/(?P<pk>\d+)/stats/',
+        CampaignStatsView.as_view(),
+        name='campaign-stats'),
     url(r'^campaigns/(?P<pk>\d+)/send/', SendCampaignView.as_view()),
     url(r'^campaigns/(?P<pk>\d+)/track/(?P<user_id>\d+)',
         TrackCampaignView.as_view(),

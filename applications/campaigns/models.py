@@ -4,7 +4,28 @@ from django.db import models
 from allauth import app_settings as allauth_app_settings
 
 
+class RecordsKeeper(object):
+
+    def __init__(self, campaign):
+        self.campaign = campaign
+        self.records = campaign.campaignrecord_set
+
+    def times_opened(self):
+        query = self.records.aggregate(models.Sum('times_opened'))
+        return query.get('times_opened__sum') or 0
+
+    def successful_email_count(self):
+        return self.records.filter(was_sent=True).count()
+
+    def unsuccessful_email_count(self):
+        return self.records.filter(was_sent=False).count()
+
+
+
+
 class Campaign(models.Model):
+
+    email = models.CharField(max_length=255)
 
     title = models.CharField(max_length=255)
 
@@ -19,6 +40,17 @@ class Campaign(models.Model):
 
     user = models.ForeignKey(
         allauth_app_settings.USER_MODEL, related_name='campaigns')
+
+    datetime_sent = models.DateTimeField(null=True, default=None)
+
+    @property
+    def records(self):
+        if not hasattr(self, '_records'):
+            self._records = RecordsKeeper(self)
+        return self._records
+
+    def was_sent(self):
+        return bool(self.datetime_sent)
 
     def full_body(self, request, user_id):
         return '{body}<br>{track_url}'.format(body=self.body,
