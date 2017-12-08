@@ -18,7 +18,7 @@ const TagSearch = createClass({
         return {
             backspaceRemoves: true,
             multi: true,
-            value: '',
+            value: this.props.value || [],
             creatable: false,
         };
     },
