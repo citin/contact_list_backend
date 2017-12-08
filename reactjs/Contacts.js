@@ -23,6 +23,11 @@ class ContactItem extends Component
       this.props.history.push(`contacts/${this.props.contactData.id}/edit/`)
     }
 
+    handleShowClick()
+    {
+      this.props.history.push(`contacts/${this.props.contactData.id}/`)
+    }
+
     handleDeleteClick()
     {
         this.props.deleteContact(this.props.contactData.id);
@@ -34,6 +39,10 @@ class ContactItem extends Component
             <li className="list-group-item">
                 {this.props.contactData.name}
 		<div className='pull-right'>
+                <button className="btn btn-sm btn-warning"
+                    onClick={this.handleShowClick.bind(this)}>
+                    <span className="glyphicon glyphicon-eye-open"></span>
+                </button>
                 <button className="btn btn-sm btn-primary"
                     onClick={this.handleEditClick.bind(this)}>
                     <span className="glyphicon glyphicon-edit"></span>
