@@ -133,7 +133,8 @@ class CampaignInput extends Component {
                 this.state.campaignTitle,
                 this.state.campaignBody,
                 this.state.campaignEmails,
-                this.state.campaignEmail
+                this.state.campaignEmail,
+                this.state.campaignSubject,
             );
             this.setState({
                 campaignName: '',
@@ -250,7 +251,7 @@ class Campaigns extends Component {
             })
     }
 
-    addCampaign(title, body, emails, email)
+    addCampaign(title, body, emails, email, subject)
     {
         var formData = new FormData(),
             newmails = emails.map(e => e.email).join(',');
@@ -258,6 +259,7 @@ class Campaigns extends Component {
         formData.append('title', title);
         formData.append('email', email);
         formData.append('body', body);
+        formData.append('subject', subject);
         formData.append('emails', newmails);
         formData.append('csrfmiddlewaretoken', csrf());
 

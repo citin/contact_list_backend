@@ -23,6 +23,7 @@ class CampaignEditInput extends Component {
                   campaignTitle: campaign.data.title, 
                   campaignBody: campaign.data.body,
                   campaignEmail: campaign.data.email,
+                  campaignEmails: campaign.data.emails,
                   campaignSubject: campaign.data.subject
                 } )
             })
@@ -32,11 +33,15 @@ class CampaignEditInput extends Component {
       this.getCampaign(this.props.campaignId)
     }
 
-    editCampaign(title, body)
+    editCampaign(title, body, emails, email, subject)
     {
-        var formData  = new FormData();
+        var formData = new FormData()
+
         formData.append('title', title);
+        formData.append('email', email);
+        formData.append('emails', emails);
         formData.append('body', body);
+        formData.append('subject', subject);
         formData.append('csrftoken', csrf());
 
         patchIt('api/campaigns/' + this.props.campaignId + '/', formData, 'multipart/form-data')
@@ -50,7 +55,13 @@ class CampaignEditInput extends Component {
         // Campaign validations
         if (Boolean(this.state.campaignTitle) === true)
         {
-            this.editCampaign(this.state.campaignTitle, this.state.campaignBody);
+            this.editCampaign(
+              this.state.campaignTitle, 
+              this.state.campaignBody, 
+              this.state.campaignEmails,
+              this.state.campaignEmail,
+              this.state.campaignSubject,
+            );
             this.setState({
                 hasErrors: false,
             });
