@@ -8,6 +8,7 @@ import {
 import Callback from './Callback'
 import Campaigns from './Campaigns'
 import CampaignEdit from './CampaignEdit'
+import CampaignShow from './CampaignShow'
 import Contacts from './Contacts'
 import ContactEdit from './ContactEdit'
 import Layout from './Layout'
@@ -25,6 +26,7 @@ const AppRouter = () => (
                 <PrivateRoute exact path="/contacts" component={Contacts} />
                 <PrivateRoute exact path="/contacts/:id/edit" component={ContactEdit} />
                 <PrivateRoute exact path="/campaigns" component={Campaigns} />
+                <PrivateRoute exact path="/campaigns/:id" component={CampaignShow} />
                 <PrivateRoute exact path="/campaigns/:id/edit" component={CampaignEdit} />
                 <Route path="/callback" component={Callback} />
                 <Route path="/login" component={LogIn} />

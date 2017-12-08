@@ -6,7 +6,7 @@ const AuthButton = withRouter(({ history }) => (
     isLoggedIn()
     ? (
         <p>
-            Welcome!
+            Bienvenido!
             <button className="btn btn-danger log" onClick={() => logout(() => history.push('/'))}>
                 Log Out
             </button>

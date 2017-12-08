@@ -216,7 +216,7 @@ class Contacts extends Component {
                 <div className="col-md-6">
                     <ul className="list-group">
                       <div className="panel panel-default">
-                      <div className="panel-heading">List</div>
+                      <div className="panel-heading">Contactos</div>
                       <div className="panel-body">
                         {items}
                       </div>

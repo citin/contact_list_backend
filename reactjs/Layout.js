@@ -19,7 +19,7 @@ class Layout extends Component
                         <Link to="/contacts">Contactos</Link>
                     </li>
                     <li>
-                        <Link to="/campaigns">Campanias</Link>
+                        <Link to="/campaigns">Campañas</Link>
                     </li>
                 </ul>
                 <ul className="nav navbar-nav navbar-right">

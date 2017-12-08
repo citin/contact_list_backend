@@ -4,6 +4,7 @@ import { getIdToken, csrf } from './utils/AuthService';
 import { getIt, postIt, deleteIt, patchIt } from './utils/ApiConnector';
 import { Redirect, withRouter } from 'react-router-dom'
 import { MyStatefulEditor } from './Campaigns'
+import TagSearch from './TagSearch';
 
 
 class CampaignEditInput extends Component {
@@ -11,14 +12,19 @@ class CampaignEditInput extends Component {
     {
         super(props)
         // todo: get and map campaign
-        this.state = {campaignTitle: 'Loading..', campaignBody: 'Loading..'};
+        this.state = {campaignTitle: 'Cargando...', campaignBody: 'Cargando..'};
     }
 
     getCampaign(campaignId)
     {
         getIt('api/campaigns/' + campaignId + '/')
             .then((campaign) => {
-                this.setState({campaignTitle: campaign.data.title, campaignBody: campaign.data.body} )
+                this.setState({
+                  campaignTitle: campaign.data.title, 
+                  campaignBody: campaign.data.body,
+                  campaignEmail: campaign.data.email,
+                  campaignSubject: campaign.data.subject
+                } )
             })
     }
 
@@ -58,6 +64,15 @@ class CampaignEditInput extends Component {
         this.setState({[e.target.name]: e.target.value});
     }
 
+    updateBodyState(e)
+    {
+        this.setState({campaignBody: e});
+    }
+
+    updateEmails(e)
+    {
+        this.setState({campaignEmails: e});
+    }
     inputClass()
     {
         return 'form-control ' + (this.state.hasErrors ? 'is-invalid' : '');
@@ -67,23 +82,40 @@ class CampaignEditInput extends Component {
     {
         return (
           <div className="panel panel-default">
-          <div className="panel-heading">Editar Campaigno</div>
+          <div className="panel-heading">Editar Campaña</div>
           <div className="panel-body">
             <form onSubmit={this.handleSubmit.bind(this)}>
                 <div className="form-group">
-                    <label>Title: </label>
+                    <label>Titulo: </label>
                     <input type='text'
                         className={this.inputClass()}
                         name='campaignTitle'
                         value={this.state.campaignTitle}
                         onChange={this.updateState.bind(this)}/>
 
-                    <label>Body: </label>
+                    <label>Email emisor: </label>
+                    <input type='email'
+                        className={this.inputClass()}
+                        name='campaignEmail'
+                        value={this.state.campaignEmail}
+                        onChange={this.updateState.bind(this)}/>
+
+                    <label>Asunto: </label>
                     <input type='text'
+                        className={this.inputClass()}
+                        name='campaignSubject'
+                        value={this.state.campaignSubject}
+                        onChange={this.updateState.bind(this)}/>
+
+                    <label>Mensaje: </label>
+                    <MyStatefulEditor
                         className={this.inputClass()}
                         name='campaignBody'
                         value={this.state.campaignBody}
-                        onChange={this.updateState.bind(this)}/>
+                        onChange={this.updateBodyState.bind(this)}/>
+
+                    <label>Receptores: </label>
+                    <TagSearch onChange={this.updateEmails.bind(this) } />
                 </div>
                 <div className="form-group">
                     <input className="btn btn-success" type="submit" value="Edit"/>

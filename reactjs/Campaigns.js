@@ -12,8 +12,9 @@ class MyStatefulEditor extends Component {
     };
 
     state = {
-        value: RichTextEditor.createEmptyValue()
+        value: RichTextEditor.createValueFromString(this.props.value, 'html')
     }
+
 
     onChange = (value) => {
         this.setState({value});
@@ -53,6 +54,11 @@ class CampaignItem extends Component
         this.props.history.push('campaigns/' + this.props.campaignData.id + '/edit/')
     }
 
+    handleShowClick()
+    {
+        this.props.history.push('campaigns/' + this.props.campaignData.id + '/')
+    }
+
     handleDeleteClick()
     {
         if (confirm('Seguro que desea borrar esta campana?'))
@@ -77,6 +83,10 @@ class CampaignItem extends Component
             <li className="list-group-item">
                 {this.props.campaignData.title}
                 <div className='pull-right'>
+                    <button className="btn btn-sm btn-warning"
+                        onClick={this.handleShowClick.bind(this)}>
+                        <span className="glyphicon glyphicon-eye-open"></span>
+                    </button>
                     <button className="btn btn-sm btn-primary"
                         onClick={this.handleEditClick.bind(this)}>
                         <span className="glyphicon glyphicon-edit"></span>
@@ -89,6 +99,7 @@ class CampaignItem extends Component
                         onClick={this.handleSendClick.bind(this)}>
                         <span className="glyphicon glyphicon-send"></span>
                     </button>
+
                 </div>
             </li>
         )
@@ -166,7 +177,7 @@ class CampaignInput extends Component {
                 <div className="panel-body">
                     <form onSubmit={this.handleSubmit.bind(this)}>
                         <div className="form-group">
-                            <label>Title: </label>
+                            <label>Título: </label>
                             <input type='text'
                                 className={this.inputClass()}
                                 ref={(input) => { this.titleInput = input; }}
@@ -174,30 +185,32 @@ class CampaignInput extends Component {
                                 value={this.state.campaignTitle}
                                 onChange={this.updateState.bind(this)}/>
 
-                            <label>Email from: </label>
+                            <label>Email emisor: </label>
                             <input type='email'
                                 className={this.inputClass()}
                                 name='campaignEmail'
                                 value={this.state.campaignEmail}
                                 onChange={this.updateState.bind(this)}/>
 
-                            <label>Subject: </label>
+                            <label>Asunto: </label>
                             <input type='text'
                                 className={this.inputClass()}
                                 name='campaignSubject'
                                 value={this.state.campaignSubject}
                                 onChange={this.updateState.bind(this)}/>
 
-                            <label>Body: </label>
+                            <label>Mensaje: </label>
                             <MyStatefulEditor
                                 className={this.inputClass()}
                                 name='campaignBody'
                                 onChange={this.updateBodyState.bind(this)}/>
+
+                            <label>Receptores: </label>
                             <TagSearch onChange={this.updateEmails.bind(this) } />
                         </div>
 
                         <div className="form-group">
-                            <input className="btn btn-success" type="submit" value="Add"/>
+                            <input className="btn btn-success" type="submit" value="Agregar"/>
                         </div>
                     </form>
                 </div>
@@ -288,7 +301,7 @@ class Campaigns extends Component {
                     <div className="col-md-12">
                         <ul className="list-group">
                             <div className="panel panel-default">
-                                <div className="panel-heading">List</div>
+                                <div className="panel-heading">Campañas</div>
                                 <div className="panel-body">
                                     {items}
                                 </div>
