@@ -16,7 +16,7 @@ from applications.contacts.views import ContactsByTags
 router = routers.DefaultRouter()
 
 router.register(r'contacts', ContactViewSet)
-router.register(r'campaigns', CampaignViewSet)
+router.register(r'campaigns', CampaignViewSet, base_name='campaigns')
 
 urlpatterns = [
     url(r'^contacts_by_tags$', ContactsByTags.as_view()),

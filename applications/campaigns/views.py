@@ -15,8 +15,10 @@ from applications.contacts.models import ContactsList
 
 class CampaignViewSet(viewsets.ModelViewSet):
 
-    queryset = Campaign.objects.all()
     serializer_class = CampaignSerializer
+
+    def get_queryset(self):
+        return self.request.user.campaigns.all()
 
     def perform_create(self, serializer):
         instance = serializer.save(user=self.request.user)
