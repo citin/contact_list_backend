@@ -21,6 +21,7 @@
     "dependencies": {
         "auth0-js": "^8.10.1",
         "axios": "^0.17.0",
+        "chart.js": "^2.7.1",
         "es6-promise": "^3.1.2",
         "fetch": "^1.1.0",
         "isomorphic-fetch": "^2.2.1",
@@ -29,6 +30,7 @@
         "peer": "^0.2.8",
         "radium": "^0.16.6",
         "react": "^15.6.1",
+        "react-chartjs-2": "^2.6.4",
         "react-cookie": "^0.4.5",
         "react-dom": "^15.6.1",
         "react-redux": "^4.4.0",
