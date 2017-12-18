@@ -20,17 +20,20 @@ class ContactItem extends Component
 
     handleEditClick()
     {
-      this.props.history.push(`contacts/${this.props.contactData.id}/edit/`)
+        this.props.history.push(`contacts/${this.props.contactData.id}/edit/`)
     }
 
     handleShowClick()
     {
-      this.props.history.push(`contacts/${this.props.contactData.id}/`)
+        this.props.history.push(`contacts/${this.props.contactData.id}/`)
     }
 
     handleDeleteClick()
     {
-        this.props.deleteContact(this.props.contactData.id);
+        if (confirm('Seguro que desea eliminar este contacto?')) 
+        {
+            this.props.deleteContact(this.props.contactData.id);
+        }
     }
 
     render()
@@ -38,20 +41,26 @@ class ContactItem extends Component
         return (
             <li className="list-group-item">
                 {this.props.contactData.name}
-		<div className='pull-right'>
-                <button className="btn btn-sm btn-warning"
-                    onClick={this.handleShowClick.bind(this)}>
-                    <span className="glyphicon glyphicon-eye-open"></span>
-                </button>
-                <button className="btn btn-sm btn-primary"
-                    onClick={this.handleEditClick.bind(this)}>
-                    <span className="glyphicon glyphicon-edit"></span>
-                </button>
-                <button className="btn btn-sm btn-danger"
-                    onClick={this.handleDeleteClick.bind(this)}>
-                    <span className="glyphicon glyphicon-remove"></span>
-                </button>
-		</div>
+                <div className='pull-right'>
+                    <button className="btn btn-xs btn-warning"
+                        data-toggle="tooltip"
+                        title="ver detalles"
+                        onClick={this.handleShowClick.bind(this)}>
+                        <span className="glyphicon glyphicon-eye-open"></span>
+                    </button>
+                    <button className="btn btn-xs btn-primary"
+                        data-toggle="tooltip"
+                        title="editar contacto"
+                        onClick={this.handleEditClick.bind(this)}>
+                        <span className="glyphicon glyphicon-edit"></span>
+                    </button>
+                    <button className="btn btn-xs btn-danger"
+                        data-toggle="tooltip"
+                        title="eliminar contacto"
+                        onClick={this.handleDeleteClick.bind(this)}>
+                        <span className="glyphicon glyphicon-remove"></span>
+                    </button>
+                </div>
             </li>
         )
     }
@@ -105,45 +114,45 @@ class ContactInput extends Component {
     render()
     {
         return (
-          <div className="panel panel-default">
-          <div className="panel-heading">Nuevo Contacto</div>
-          <div className="panel-body">
-            <form onSubmit={this.handleSubmit.bind(this)}>
-                <div className="form-group">
-                    <label>Nombre: </label>
-                    <input type='text'
-                        className={this.inputClass()}
-                        name='contactName'
-                        value={this.state.contactName}
-                        onChange={this.updateState.bind(this)}/>
+            <div className="panel panel-default">
+                <div className="panel-heading">Nuevo Contacto</div>
+                <div className="panel-body">
+                    <form onSubmit={this.handleSubmit.bind(this)}>
+                        <div className="form-group">
+                            <label>Nombre: </label>
+                            <input type='text'
+                                className={this.inputClass()}
+                                name='contactName'
+                                value={this.state.contactName}
+                                onChange={this.updateState.bind(this)}/>
 
-                    <label>Email: </label>
-                    <input type='text'
-                        className={this.inputClass()}
-                        name='contactEmail'
-                        value={this.state.contactEmail}
-                        onChange={this.updateState.bind(this)}/>
+                            <label>Email: </label>
+                            <input type='text'
+                                className={this.inputClass()}
+                                name='contactEmail'
+                                value={this.state.contactEmail}
+                                onChange={this.updateState.bind(this)}/>
 
-                    <label>Telefono: </label>
-                    <input type='text'
-                        className={this.inputClass()}
-                        name='contactPhoneNumber'
-                        value={this.state.contactPhoneNumber}
-                        onChange={this.updateState.bind(this)}/>
+                            <label>Telefono: </label>
+                            <input type='text'
+                                className={this.inputClass()}
+                                name='contactPhoneNumber'
+                                value={this.state.contactPhoneNumber}
+                                onChange={this.updateState.bind(this)}/>
 
-                    <label>Tags: </label>
-                    <input type='text'
-                        className={this.inputClass()}
-                        name='contactTags'
-                        value={this.state.contactTags}
-                        onChange={this.updateState.bind(this)}/>
+                            <label>Tags: </label>
+                            <input type='text'
+                                className={this.inputClass()}
+                                name='contactTags'
+                                value={this.state.contactTags}
+                                onChange={this.updateState.bind(this)}/>
+                        </div>
+                        <div className="form-group">
+                            <input className="btn btn-success" type="submit" value="Add"/>
+                        </div>
+                    </form>
                 </div>
-                <div className="form-group">
-                    <input className="btn btn-success" type="submit" value="Add"/>
-                </div>
-            </form>
-          </div>
-          </div>
+            </div>
         )
     }
 }
@@ -164,8 +173,15 @@ class Contacts extends Component {
             })
     }
 
-    componentDidMount() {
+    componentDidMount()
+    {
         this.all()
+        $('[data-toggle="tooltip"]').tooltip()
+    }
+
+    componentDidUpdate()
+    {
+        $('[data-toggle="tooltip"]').tooltip()
     }
 
     deleteContact(contactPk)
@@ -185,7 +201,7 @@ class Contacts extends Component {
         formData.append('name', name);
         formData.append('email', email);
         formData.append('phone', phone);
-        formData.append('tags', JSON.stringify( tags.split(', '))) //'["apple", "banana", "orange"]');
+        formData.append('tags', JSON.stringify(tags.split(', '))) //'["apple", "banana", "orange"]');
         formData.append('csrfmiddlewaretoken', csrf());
 
         postIt('api/contacts/', formData, 'multipart/form-data')
@@ -221,20 +237,22 @@ class Contacts extends Component {
         );
         return (
             <div className='container'>
-		<div className='row'>
-                <div className="col-md-6">
-                    <ul className="list-group">
-                      <div className="panel panel-default">
-                      <div className="panel-heading">Contactos</div>
-                      <div className="panel-body">
-                        {items}
-                      </div>
-                      </div>
-                    </ul>
-                </div>
-                <div className="col-md-6">
-                    <ContactInput addContact={this.addContact.bind(this)}/>
-                </div>
+                <div className='row'>
+                    <div className="col-md-6">
+                        <ul className="list-group">
+                            <div className="panel panel-default">
+                                <div className="panel-heading">
+                                    Contactos
+                                </div>
+                                <div className="panel-body">
+                                    {items}
+                                </div>
+                            </div>
+                        </ul>
+                    </div>
+                    <div className="col-md-6">
+                        <ContactInput addContact={this.addContact.bind(this)}/>
+                    </div>
                 </div>
             </div>
         );

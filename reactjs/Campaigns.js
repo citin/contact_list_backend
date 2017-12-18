@@ -83,19 +83,27 @@ class CampaignItem extends Component
             <li className="list-group-item">
                 {this.props.campaignData.title}
                 <div className='pull-right'>
-                    <button className="btn btn-sm btn-warning"
+                    <button className="btn btn-xs btn-warning"
+                        data-toggle="tooltip"
+                        title="ver detalles"
                         onClick={this.handleShowClick.bind(this)}>
                         <span className="glyphicon glyphicon-eye-open"></span>
                     </button>
-                    <button className="btn btn-sm btn-primary"
+                    <button className="btn btn-xs btn-primary"
+                        data-toggle="tooltip"
+                        title="editar campaña"
                         onClick={this.handleEditClick.bind(this)}>
                         <span className="glyphicon glyphicon-edit"></span>
                     </button>
-                    <button className="btn btn-sm btn-danger"
+                    <button className="btn btn-xs btn-danger"
+                        data-toggle="tooltip"
+                        title="eliminar campaña"
                         onClick={this.handleDeleteClick.bind(this)}>
                         <span className="glyphicon glyphicon-remove"></span>
                     </button>
-                    <button className="btn btn-sm btn-success"
+                    <button className="btn btn-xs btn-success"
+                        data-toggle="tooltip"
+                        title="Enviar campaña"
                         onClick={this.handleSendClick.bind(this)}>
                         <span className="glyphicon glyphicon-send"></span>
                     </button>
@@ -236,8 +244,15 @@ class Campaigns extends Component {
             })
     }
 
-    componentDidMount() {
+    componentDidMount()
+    {
         this.all()
+        $('[data-toggle="tooltip"]').tooltip()
+    }
+
+    componentDidUpdate()
+    {
+        $('[data-toggle="tooltip"]').tooltip()
     }
 
     deleteCampaign(campaignPk)

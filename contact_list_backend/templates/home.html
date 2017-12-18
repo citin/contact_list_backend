@@ -7,6 +7,9 @@
         {# Application will be loaded here #}
     </div>
 
+{% endblock %}
+
+{% block extra_js %}
     {% render_bundle 'vendors' %}
     {% render_bundle 'App1' %}
-{% endblock %}
+{% endblock extra_js %}
