@@ -7,12 +7,13 @@ import RichTextEditor from 'react-rte';
 import TagSearch from './TagSearch';
 
 class MyStatefulEditor extends Component {
+
     static propTypes = {
         onChange: PropTypes.func
     };
 
     state = {
-        value: RichTextEditor.createValueFromString(this.props.value, 'html')
+        value: RichTextEditor.createValueFromString(this.props.value || '', 'html')
     }
 
 

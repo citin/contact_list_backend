@@ -11,22 +11,26 @@ class Layout extends Component
     {
         return (
             <nav className="navbar navbar-default">
-                <div className="navbar-header">
-                    <Link className="navbar-brand" to="/">APP</Link>
+                <div className="container-fluid">
+                    <div className="collapse navbar-collapse">
+                        <div className="navbar-header">
+                            <Link className="navbar-brand" to="/">APP</Link>
+                        </div>
+                        <ul className="nav navbar-nav navbar-left">
+                            <li>
+                                <Link to="/contacts">Contactos</Link>
+                            </li>
+                            <li>
+                                <Link to="/campaigns">Campañas</Link>
+                            </li>
+                        </ul>
+                        <ul className="nav navbar-nav navbar-right">
+                            <li>
+                                <AuthButton/>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                <ul className="nav navbar-nav">
-                    <li>
-                        <Link to="/contacts">Contactos</Link>
-                    </li>
-                    <li>
-                        <Link to="/campaigns">Campañas</Link>
-                    </li>
-                </ul>
-                <ul className="nav navbar-nav navbar-right">
-                    <li>
-                        <AuthButton/>
-                    </li>
-                </ul>
             </nav>
         )
     }
