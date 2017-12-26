@@ -14,6 +14,9 @@ class RecordsKeeper(object):
         query = self.records.aggregate(models.Sum('times_opened'))
         return query.get('times_opened__sum') or 0
 
+    def successful_seen_email_count(self):
+        return self.records.filter(was_sent=True, times_opened__gt=0).count()
+
     def successful_email_count(self):
         return self.records.filter(was_sent=True).count()
 

@@ -83,6 +83,7 @@ class CampaignStatsView(View):
         record_data = {
             'datetime_sent': campaign.datetime_sent,
             'times_opened': campaign.records.times_opened(),
+            'successful_seen_email_count': campaign.records.successful_seen_email_count(),
             'successful_email_count': campaign.records.successful_email_count(),
             'unsuccessful_email_count': campaign.records.unsuccessful_email_count(),
             'emails': [
