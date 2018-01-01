@@ -9,8 +9,22 @@ class ContactEditInput extends Component {
     constructor(props)
     {
         super(props)
-        // todo: get and map contact
-        this.state = {contactName: 'Loading..', contactEmail: 'Loading..', contactPhoneNumber: 'Loading..', contactTags: 'Loading..'};
+        this.state = {
+          contactName: 'Loading..', 
+          contactEmail: 'Loading..', 
+          contactPhoneNumber: 'Loading..', 
+          contactTags: 'Loading..',
+        };
+    }
+
+
+    validate()
+    {
+      return {
+        contactName: (Boolean(this.state.contactName) === false),
+        contactEmail: (Boolean(this.state.contactEmail) === false), 
+        contactTags: (Boolean(this.state.contactTags) === false),
+      }
     }
 
     getContact(contactId)
@@ -42,8 +56,12 @@ class ContactEditInput extends Component {
     {
         event.preventDefault();
 
+
         // Contact validations
-        if (Boolean(this.state.contactName) === true)
+        const errors = this.validate(this.state.contactName, this.state.contactEmail, this.state.contactTags);
+        const isEnabled = !Object.keys(errors).some(x => errors[x]);
+
+        if (isEnabled)
         {
             this.editContact(this.state.contactName, this.state.contactEmail, this.state.contactPhoneNumber, this.state.contactTags);
             this.setState({
@@ -61,38 +79,47 @@ class ContactEditInput extends Component {
 
     inputClass()
     {
-        return 'form-control ' + (this.state.hasErrors ? 'is-invalid' : '');
+        return 'form-control ' ;
     }
 
     render()
     {
+
+      const errors = this.validate(this.state.contactName, this.state.contactEmail, this.state.contactTags);
+
         return (
           <div className="panel panel-default">
           <div className="panel-heading">Editar Contacto</div>
           <div className="panel-body">
             <form onSubmit={this.handleSubmit.bind(this)}>
-                <div className="form-group">
+                <div className={"form-group " + (errors.contactName ? "has-error" : "")}>
                     <label>Nombre: </label>
                     <input type='text'
                         className={this.inputClass()}
                         name='contactName'
                         value={this.state.contactName}
                         onChange={this.updateState.bind(this)}/>
+                </div>
 
+                <div className={"form-group " + (errors.contactEmail ? "has-error" : "")}>
                     <label>Email: </label>
                     <input type='text'
                         className={this.inputClass()}
                         name='contactEmail'
                         value={this.state.contactEmail}
                         onChange={this.updateState.bind(this)}/>
+                </div>
 
+                <div className="form-group">
                     <label>Telefono: </label>
                     <input type='text'
                         className={this.inputClass()}
                         name='contactPhoneNumber'
                         value={this.state.contactPhoneNumber}
                         onChange={this.updateState.bind(this)}/>
+                </div>
 
+                <div className={"form-group " + (errors.contactTags ? "has-error" : "")}>
                     <label>Tags: </label>
                     <input type='text'
                         className={this.inputClass()}

@@ -69,10 +69,26 @@ class ContactItem extends Component
 const ContactItemWithRouter = withRouter(ContactItem)
 
 class ContactInput extends Component {
+
     constructor(props)
     {
         super(props)
-        this.state = {contactName: '', contactEmail: '', contactPhoneNumber: '', contactTags: ''};
+        this.state = {
+          contactName: '', 
+          contactEmail: '', 
+          contactPhoneNumber: '', 
+          contactTags: '',
+          hasErrors: true,        
+        };
+    }
+
+    validate()
+    {
+      return {
+        contactName: (Boolean(this.state.contactName) === false),
+        contactEmail: (Boolean(this.state.contactEmail) === false), 
+        contactTags: (Boolean(this.state.contactTags) === false),
+      }
     }
 
     handleSubmit(event)
@@ -80,7 +96,10 @@ class ContactInput extends Component {
         event.preventDefault();
 
         // Contact validations
-        if (Boolean(this.state.contactName) === true)
+        const errors = this.validate(this.state.contactName, this.state.contactEmail, this.state.contactTags);
+        const isEnabled = !Object.keys(errors).some(x => errors[x]);
+
+        if (isEnabled )
         {
             this.props.addContact(
                 this.state.contactName,
@@ -90,6 +109,9 @@ class ContactInput extends Component {
             );
             this.setState({
                 contactName: '',
+                contactEmail: '',
+                contactPhoneNumber: '',
+                contactTags: '',
                 hasErrors: false,
             });
         } else {
@@ -99,50 +121,55 @@ class ContactInput extends Component {
 
     updateState(e)
     {
-        // this.setState({
-        //     contactName: event.target.value,
-        //     hasErrors: !Boolean(this.state.contactName),
-        // });
-        this.setState({[e.target.name]: e.target.value});
+      this.setState({[e.target.name]: e.target.value});
     }
 
     inputClass()
     {
-        return 'form-control ' + (this.state.hasErrors ? 'is-invalid' : '');
+        return 'form-control ' + (this.state.hasErrors ? 'has-error' : '');
     }
 
     render()
     {
-        return (
+      const errors = this.validate(this.state.contactName, this.state.contactEmail, this.state.contactTags);
+
+      return (
+
             <div className="panel panel-default">
                 <div className="panel-heading">Nuevo Contacto</div>
                 <div className="panel-body">
                     <form onSubmit={this.handleSubmit.bind(this)}>
-                        <div className="form-group">
+                        <div className={"form-group " + (errors.contactName ? "has-error" : "")}>
                             <label>Nombre: </label>
                             <input type='text'
-                                className={this.inputClass()}
+                                className="form-control"
                                 name='contactName'
                                 value={this.state.contactName}
                                 onChange={this.updateState.bind(this)}/>
+                        </div>
 
+                        <div className={"form-group " + (errors.contactEmail ? "has-error" : "")}>
                             <label>Email: </label>
                             <input type='text'
-                                className={this.inputClass()}
+                                className="form-control"
                                 name='contactEmail'
                                 value={this.state.contactEmail}
                                 onChange={this.updateState.bind(this)}/>
+                        </div>
 
+                        <div className="form-group">
                             <label>Telefono: </label>
                             <input type='text'
-                                className={this.inputClass()}
+                                className="form-control"
                                 name='contactPhoneNumber'
                                 value={this.state.contactPhoneNumber}
                                 onChange={this.updateState.bind(this)}/>
+                        </div>
 
+                        <div className={"form-group " + (errors.contactTags ? "has-error" : "")}>
                             <label>Tags: </label>
                             <input type='text'
-                                className={this.inputClass()}
+                                className="form-control"
                                 name='contactTags'
                                 value={this.state.contactTags}
                                 onChange={this.updateState.bind(this)}/>
