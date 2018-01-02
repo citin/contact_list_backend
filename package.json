@@ -37,6 +37,7 @@
         "react-router-dom": "^4.2.2",
         "react-rte": "^0.15.0",
         "react-select": "^1.1.0",
+        "react-toastify": "^3.2.1",
         "redux": "^3.3.1",
         "redux-thunk": "^1.0.3"
     }

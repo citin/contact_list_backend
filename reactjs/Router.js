@@ -16,11 +16,14 @@ import Layout from './Layout'
 import LogIn from './LogIn'
 import PrivateRoute from './utils/PrivateRoute'
 
+ import { ToastContainer, toast } from 'react-toastify';
+
 const Home = () => <div className='container'> Bienvenidos </div>;
 
 const AppRouter = () => (
     <Router>
         <div>
+            <ToastContainer />
             <Layout/>
             <div className="container">
                 <Route exact path="/" component={Home} />
