@@ -34,6 +34,18 @@ class CampaignEditInput extends Component {
             })
     }
 
+    validate()
+    {
+      return {
+        campaignTitle: (Boolean(this.state.campaignTitle) === false),
+        campaignBody: (Boolean(this.state.campaignBody) === false),
+        campaignEmail: (Boolean(this.state.campaignEmail) === false), 
+        campaignEmails: (Boolean(this.state.campaignEmails) === false), 
+        campaignSubject: (Boolean(this.state.campaignSubject) === false),
+      }
+    }
+
+
     componentWillMount() {
         this.getCampaign(this.props.campaignId)
     }
@@ -57,8 +69,10 @@ class CampaignEditInput extends Component {
     {
         event.preventDefault();
 
-        // Campaign validations
-        if (Boolean(this.state.campaignTitle) === true)
+        const errors = this.validate();
+        const isEnabled = !Object.keys(errors).some(x => errors[x]);
+
+        if (isEnabled)
         {
             this.editCampaign(
                 this.state.campaignTitle,
@@ -91,11 +105,12 @@ class CampaignEditInput extends Component {
     }
     inputClass()
     {
-        return 'form-control ' + (this.state.hasErrors ? 'is-invalid' : '');
+        return 'form-control ';
     }
 
     render()
     {
+        const errors = this.validate();
         return (
             (this.state.isLoading)
             ? (
@@ -108,35 +123,41 @@ class CampaignEditInput extends Component {
                     <div className="panel-heading">Editar Campaña</div>
                     <div className="panel-body">
                         <form onSubmit={this.handleSubmit.bind(this)}>
-                            <div className="form-group">
+                            <div className={"form-group " + (errors.campaignTitle ? "has-error" : "")}>
                                 <label>Titulo: </label>
                                 <input type='text'
                                     className={this.inputClass()}
                                     name='campaignTitle'
                                     value={this.state.campaignTitle}
                                     onChange={this.updateState.bind(this)}/>
+                            </div>
 
+                            <div className={"form-group " + (errors.campaignEmail ? "has-error" : "")}>
                                 <label>Email emisor: </label>
                                 <input type='email'
                                     className={this.inputClass()}
                                     name='campaignEmail'
                                     value={this.state.campaignEmail}
                                     onChange={this.updateState.bind(this)}/>
-
+                            </div>
+                            <div className={"form-group " + (errors.campaignSubject ? "has-error" : "")}>
                                 <label>Asunto: </label>
                                 <input type='text'
                                     className={this.inputClass()}
                                     name='campaignSubject'
                                     value={this.state.campaignSubject}
                                     onChange={this.updateState.bind(this)}/>
-
+                            </div>
+                            <div className={"form-group " + (errors.campaignBody ? "has-error" : "")}>
                                 <label>Mensaje: </label>
                                 <MyStatefulEditor
                                     className={this.inputClass()}
                                     name='campaignBody'
                                     value={this.state.campaignBody}
                                     onChange={this.updateBodyState.bind(this)}/>
+                            </div>
 
+                            <div className={"form-group " + (errors.campaignEmails ? "has-error" : "")}>
                                 <label>Receptores: </label>
                                 <TagSearch onChange={this.updateEmails.bind(this)} value={this.state.campaignEmails} />
                             </div>

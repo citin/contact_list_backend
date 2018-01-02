@@ -96,7 +96,7 @@ class ContactInput extends Component {
         event.preventDefault();
 
         // Contact validations
-        const errors = this.validate(this.state.contactName, this.state.contactEmail, this.state.contactTags);
+        const errors = this.validate();
         const isEnabled = !Object.keys(errors).some(x => errors[x]);
 
         if (isEnabled )
@@ -131,7 +131,7 @@ class ContactInput extends Component {
 
     render()
     {
-      const errors = this.validate(this.state.contactName, this.state.contactEmail, this.state.contactTags);
+      const errors = this.validate();
 
       return (
 
