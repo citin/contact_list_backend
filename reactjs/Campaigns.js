@@ -135,9 +135,9 @@ class CampaignInput extends Component {
     {
       return {
         campaignTitle: (Boolean(this.state.campaignTitle) === false),
-        campaignBody: (Boolean(this.state.campaignBody) === false),
+        campaignBody: ((this.state.campaignBody == "<p><br></p>") || (this.state.campaignBody == "")),
         campaignEmail: (Boolean(this.state.campaignEmail) === false), 
-        campaignEmails: (Boolean(this.state.campaignEmails) === false), 
+        campaignEmails: (Boolean(this.state.campaignEmails.length) === false), 
         campaignSubject: (Boolean(this.state.campaignSubject) === false),
       }
     }
@@ -232,6 +232,11 @@ class CampaignInput extends Component {
 
                         <div className={"form-group " + (errors.campaignBody ? "has-error" : "")}>
                             <label>Mensaje: </label>
+                            { errors.campaignBody &&
+                              <div className="alert alert-danger">
+                              <span className="glyphicon glyphicon-remove danger"></span>
+                                No puede estar vacio
+                              </div> }
                             <MyStatefulEditor
                                 className={this.inputClass()}
                                 name='campaignBody'
@@ -240,6 +245,12 @@ class CampaignInput extends Component {
 
                         <div className={"form-group " + (errors.campaignEmails ? "has-error" : "")}>
                             <label>Receptores: </label>
+                            { errors.campaignEmails &&
+                              <div className="alert alert-danger">
+                              <span className="glyphicon glyphicon-remove danger"></span>
+                                No puede estar vacio
+                              </div> }
+                            
                             <TagSearch onChange={this.updateEmails.bind(this) } />
                         </div>
 
