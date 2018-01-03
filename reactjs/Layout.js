@@ -28,6 +28,15 @@ class Layout extends Component
                             <li>
                                 <AuthButton/>
                             </li>
+                            {
+                                isLoggedIn() ? '' : (
+                                    <li>
+                                        <a href="/accounts/signup">
+                                            Sign In
+                                        </a>
+                                    </li>
+                                )
+                            }
                         </ul>
                     </div>
                 </div>
