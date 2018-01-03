@@ -14,7 +14,7 @@ class Layout extends Component
                 <div className="container-fluid">
                     <div className="collapse navbar-collapse">
                         <div className="navbar-header">
-                            <Link className="navbar-brand" to="/">APP</Link>
+                            <Link className="navbar-brand" to="/">Campaigns App</Link>
                         </div>
                         <ul className="nav navbar-nav navbar-left">
                             <li>

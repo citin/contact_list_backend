@@ -24,8 +24,6 @@ class RecordsKeeper(object):
         return self.records.filter(was_sent=False).count()
 
 
-
-
 class Campaign(models.Model):
 
     email = models.CharField(max_length=255)

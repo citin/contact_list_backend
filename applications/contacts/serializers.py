@@ -15,6 +15,8 @@ class ContactSerializer(TaggitSerializer, serializers.ModelSerializer):
         read_only_fields = ('id',)
 
     def validate_email(self, value):
+        if self.context['request'].method == 'PUT':
+            return value
         user = self.context['request'].user
         if user.contacts.filter(email=value).exists():
             raise serializers.ValidationError(
