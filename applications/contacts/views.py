@@ -21,7 +21,7 @@ class ContactsByTags(View):
 
     def post(self, request, *args, **kwargs):
         tags = (request.POST.get('tags', '') or '').split(',')
-        contacts = Contact.objects.find_by_tags(tags)
+        contacts = Contact.objects.find_by_any(tags)
         return JsonResponse({'contacts': [
             {'email': c.email, 'label': c.email} for c in contacts
         ]})
