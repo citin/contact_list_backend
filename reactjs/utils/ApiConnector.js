@@ -3,7 +3,7 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 
 var reload_conf = () => {
-    axios.defaults.baseURL = 'http://localhost:8000/';
+    axios.defaults.baseURL = 'http://lascampanias.com:8080/';
     axios.defaults.headers.common['Authorization'] = "JWT " + getIdToken();
     axios.defaults.headers.common['X-CSRF-Token'] = csrf();
     axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
