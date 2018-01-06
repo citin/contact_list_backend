@@ -1,6 +1,25 @@
 Simple Email Based Marketing System
 ===================================
 
+Instrucciones:
+
+1. editar `/etc/hosts` con lo siguiente:
+```
+127.0.0.1 lascampanias.com
+```
+
+2. levantar la applicacion con docker-compose:
+```bash
+docker-compose up
+```
+
+3. acceder a la applicacion en `http://lascampanias.com:8080/`
+
+4. Luego de crear y enviar la campania, corroborar el envio en la consola y
+   clickear el link que se agrega al final de cada mail para tener datos de
+   estadisticas.
+
+
 api endpoints:
 
 - token auth:
