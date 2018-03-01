@@ -1,5 +1,6 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { login, logout, isLoggedIn } from './utils/AuthService'
 
 const AuthButton = withRouter(({ history }) => (
@@ -9,11 +10,7 @@ const AuthButton = withRouter(({ history }) => (
             Log Out
         </a>
     )
-    : (
-        <a href="#" onClick={() => login(() => history.push('/contacts'))}>
-            Log In
-        </a>
-    )
+    :  <Link to="/login">Log in</Link>
 )
 )
 

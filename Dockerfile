@@ -14,7 +14,7 @@ ADD . /app/
 
 # Install python dependencies using pip.
 RUN pip install -r requirements.txt
-
+RUN touch db.sqlite3
 RUN python manage.py migrate
 
 RUN python manage.py loaddata contact_list_backend/fixtures/*
