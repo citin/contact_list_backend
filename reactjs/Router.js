@@ -14,6 +14,7 @@ import ContactShow from './ContactShow'
 import ContactEdit from './ContactEdit'
 import Layout from './Layout'
 import LogIn from './LogIn'
+import SignIn from './SignIn'
 import PrivateRoute from './utils/PrivateRoute'
 
  import { ToastContainer, toast } from 'react-toastify';
@@ -35,6 +36,7 @@ const AppRouter = () => (
                 <PrivateRoute exact path="/campaigns/:id/edit" component={CampaignEdit} />
                 <Route path="/callback" component={Callback} />
                 <Route path="/login" component={LogIn} />
+                <Route path="/signin" component={SignIn} />
             </div>
         </div>
     </Router>

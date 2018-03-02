@@ -49,7 +49,6 @@ class ContactEditInput extends Component {
         formData.append('csrftoken', csrf());
 
         patchIt('api/contacts/' + this.props.contactId + '/', formData, 'multipart/form-data')
-            
     }
 
     handleSubmit(event)

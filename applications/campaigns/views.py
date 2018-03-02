@@ -3,6 +3,7 @@ from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.views.generic import View
+from django.http import HttpResponseForbidden
 
 from rest_framework import viewsets
 
@@ -97,3 +98,22 @@ class CampaignStatsView(View):
         }
 
         return JsonResponse(record_data)
+
+
+class SignInView(View):
+    http_method_names = ['post']
+
+    def post(self, request, *args, **kwargs):
+        username = request.POST.get('username', None)
+        password = request.POST.get('password', None)
+        password_confirmation = request.POST.get('password_confirmation', None)
+
+        if username is None or password != password_confirmation:
+            return HttpResponseForbidden()
+        else:
+            from django.contrib.auth import get_user_model
+            user = get_user_model().objects.create(username=username)
+            user.set_password(password)
+            user.save()
+            # user.token = token.new()
+            return JsonResponse({'status': 'success', 'data': 'success'})

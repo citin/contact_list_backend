@@ -8,6 +8,7 @@ from rest_framework_jwt.views import obtain_jwt_token
 from applications.campaigns.views import CampaignStatsView
 from applications.campaigns.views import CampaignViewSet
 from applications.campaigns.views import SendCampaignView
+from applications.campaigns.views import SignInView
 from applications.campaigns.views import TrackCampaignView
 from applications.contacts.views import ContactViewSet
 from applications.contacts.views import ContactsByTags
@@ -19,6 +20,7 @@ router.register(r'contacts', ContactViewSet)
 router.register(r'campaigns', CampaignViewSet, base_name='campaigns')
 
 urlpatterns = [
+    url(r'^signin/$', SignInView.as_view()),
     url(r'^contacts_by_tags$', ContactsByTags.as_view()),
     url(r'^admin/', admin.site.urls),
     url(r'^api/campaigns/(?P<pk>\d+)/stats/',

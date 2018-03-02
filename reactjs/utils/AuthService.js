@@ -5,6 +5,28 @@ const ID_TOKEN_KEY     = 'id_token';
 const ACCESS_TOKEN_KEY = 'access_token';
 const CSRF_SELECTOR    = 'meta[name=csrftoken]';
 
+var signin = (username, password, passConfirm, success, error) => {
+
+    if (!username || !password) return false
+    if (password !== passConfirm) return false
+
+    let formData  = new FormData()
+    formData.append('username', username)
+    formData.append('password', password)
+    formData.append('password_confirmation', passConfirm)
+    formData.append('csrftoken', csrf())
+    formData.append('csrfmiddlewaretoken', csrf())
+
+    return postIt('signin/',
+        formData,
+        'multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW')
+        .then((response) => {
+            if (success !== undefined) success(response)
+        })
+        .catch((response) => {
+            if (error !== undefined) error(response.response.data)
+        })
+}
 var login = (username, password, success, error) => {
 
     if (!username || !password) return false
@@ -79,6 +101,7 @@ var getTokenExpirationDate = (encodedToken) => {
 }
 
 var isTokenExpired = (token) =>  getTokenExpirationDate(token) < new Date();
+window.csrf = csrf;
 
 export {
     csrf,
@@ -86,6 +109,7 @@ export {
     getIdToken,
     isLoggedIn,
     login,
+    signin,
     logout,
     setAccessToken,
     setIdToken,

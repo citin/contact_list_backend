@@ -31,9 +31,7 @@ class Layout extends Component
                             {
                                 isLoggedIn() ? '' : (
                                     <li>
-                                        <a href="/accounts/signup">
-                                            Sign In
-                                        </a>
+                                        <Link to="/signin">Sign In</Link>
                                     </li>
                                 )
                             }
