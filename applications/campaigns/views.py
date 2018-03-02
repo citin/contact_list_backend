@@ -53,9 +53,10 @@ class SendCampaignView(View):
                                  [campaign.email],
                                  fail_silently=False)
 
-                CampaignRecord.objects.create(contact=contact,
-                                              campaign=campaign,
-                                              was_sent=bool(sent))
+                record, _ = CampaignRecord.objects.get_or_create(contact=contact,
+                                              campaign=campaign)
+                record.was_sent = bool(sent)
+                record.save()
 
             return JsonResponse({'status': 'success'})
 

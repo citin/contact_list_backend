@@ -29,6 +29,13 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'apikey'
+EMAIL_HOST_PASSWORD = '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'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -64,7 +71,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # CORS_ORIGIN_WHITELIST = (
 #     'localhost:3000',
