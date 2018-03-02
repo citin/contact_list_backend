@@ -64,8 +64,8 @@ class TrackCampaignView(View):
     http_method_names = ['get']
 
     def get(self, request, *args, **kwargs):
-        contact = Contact.objects.get(pk=self.kwargs['user_id'])
-        campaign = Campaign.objects.get(pk=self.kwargs['pk'])
+        contact = Contact.objects.filter(pk=self.kwargs['user_id']).first()
+        campaign = Campaign.objects.filter(pk=self.kwargs['pk']).first()
         record, _ = CampaignRecord.objects.get_or_create(contact=contact,
                                                          campaign=campaign)
         record.increment_opened()
