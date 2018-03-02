@@ -108,10 +108,12 @@ class SignInView(View):
         password = request.POST.get('password', None)
         password_confirmation = request.POST.get('password_confirmation', None)
 
+        from django.contrib.auth import get_user_model
         if username is None or password != password_confirmation:
-            return HttpResponseForbidden()
+            return HttpResponseForbidden('invalid data')
+        elif get_user_model().objects.filter(username=username).exists():
+            return HttpResponseForbidden('username already in use')
         else:
-            from django.contrib.auth import get_user_model
             user = get_user_model().objects.create(username=username)
             user.set_password(password)
             user.save()
