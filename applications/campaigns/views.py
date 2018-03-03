@@ -36,6 +36,7 @@ class SendCampaignView(View):
     http_method_names = ['post']
 
     def post(self, request, *args, **kwargs):
+
         campaign = Campaign.objects.get(pk=self.kwargs['pk'])
 
         if campaign.was_sent():

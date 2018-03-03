@@ -24,7 +24,6 @@ var signin = (username, password, passConfirm, success, error) => {
             if (success !== undefined) success(response)
         })
         .catch((response) => {
-          window.resp = response.response;
             if (error !== undefined) error(response.response.data)
         })
 }
